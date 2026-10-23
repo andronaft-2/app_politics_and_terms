@@ -7,5 +7,6 @@ Privacy policies and terms of use for apps by Dre Dev (mobile.support@zhukovskyi
 | --- | --- | --- |
 | Fastwise: Fasting Tracker | [fastwise/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/privacy.html) | [fastwise/terms.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/terms.html) |
 | Days Until: Countdown Widget | [days-until/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/days-until/privacy.html) | [days-until/terms.html](https://andronaft-2.github.io/app_politics_and_terms/days-until/terms.html) |
+| Electrician Calc | [electrician-calc/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/electrician-calc/privacy.html) | [electrician-calc/terms.html](https://andronaft-2.github.io/app_politics_and_terms/electrician-calc/terms.html) |
 
 Add a new app as a new folder with its own `privacy.html` and `terms.html`, and link it from `index.html`.
