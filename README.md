@@ -1,6 +1,6 @@
 # App policies and terms
 
-Privacy policies and terms of use for apps by andronaft-2, served with GitHub Pages
+Privacy policies and terms of use for apps by Dre Dev (mobile.support@zhukovskyi.space), served with GitHub Pages
 (Settings → Pages → Deploy from a branch → `main` / root).
 
 | App | Privacy policy | Terms of use |
