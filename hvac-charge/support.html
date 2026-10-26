@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HVAC Charge support</title>
+<link rel="stylesheet" href="../style.css">
+<style>h3 { font-size: 17px; margin: 20px 0 4px; }</style>
+</head>
+<body>
+<main>
+  <header><div class="logo" style="background: linear-gradient(135deg, #38bdf8, #a078ff 55%, #ff7a45)"></div><h1>HVAC Charge support</h1></header>
+  <p class="muted">Dre Dev · <a href="mailto:mobile.support@zhukovskyi.space">mobile.support@zhukovskyi.space</a></p>
+  <nav class="lang"><a href="#en">English</a><a href="#uk">Українська</a></nav>
+
+  <section class="doc" id="en" lang="en">
+    <h2>HVAC Charge · Support</h2>
+    <p>Superheat, subcooling, target superheat and PT charts for HVAC/R technicians. Offline, no account.</p>
+    <p><strong>Still need help?</strong> Write to <a href="mailto:mobile.support@zhukovskyi.space">mobile.support@zhukovskyi.space</a>. Include your phone model, the refrigerant and the readings you entered. We usually reply within 2 working days.</p>
+
+    <h2>Questions and answers</h2>
+    <h3>Where do the pressure-temperature values come from?</h3>
+    <p>From manufacturer PT charts published by Arkema (Forane), generated with NIST REFPROP, and checked against NIST-based equations and the Chemours R-454B table. The app lists every source in Settings → Sources and accuracy. Outside the printed range (−50 °F to 150 °F) the app shows no value instead of guessing.</p>
+    <h3>Why are there two values for R-454B, R-407C and other blends?</h3>
+    <p>These blends have temperature glide. Superheat is measured from the dew point (saturated vapor) and subcooling from the bubble point (saturated liquid); the app picks the right one for you.</p>
+    <h3>My digital gauge already shows the saturation temperature.</h3>
+    <p>Tap “Use sat. temp” on the suction or liquid card and type the saturation temperature instead of the pressure.</p>
+    <h3>Where does the target superheat come from?</h3>
+    <p>From the manufacturer superheat charging table for fixed-orifice (piston) systems, by outdoor dry bulb and indoor wet bulb. If the table has no value for your conditions, the app says so; weigh in the nameplate charge instead. Always follow the charging chart of the equipment you service.</p>
+    <h3>How do I switch to °C and bar?</h3>
+    <p>Settings → Units. Values you already typed are converted.</p>
+    <h3>A refrigerant I need is missing.</h3>
+    <p>We only add refrigerants with a published manufacturer table we have checked. Email us which one you need.</p>
+    <h3>How do I restore Pro on a new phone?</h3>
+    <p>Install the app with the same Google Play account or Apple ID, open Settings and tap “Restore purchases”.</p>
+    <h3>How do I cancel a subscription?</h3>
+    <p>On Android: Google Play → Payments &amp; subscriptions → Subscriptions. On iPhone: Settings → your name → Subscriptions. Cancel at least 24 hours before the period ends; Pro stays active until the end of the paid period. The lifetime option is a one-time purchase and never renews.</p>
+    <h3>How do I get a refund?</h3>
+    <p>Refunds are handled by the store: <a href="https://support.google.com/googleplay/answer/2479637">Google Play</a> or <a href="https://reportaproblem.apple.com/">Apple</a>.</p>
+    <h3>Where is my data?</h3>
+    <p>Everything you enter and save is stored only on your device. There are no accounts, so we cannot see or recover it. Deleting the app deletes the data.</p>
+  </section>
+
+  <section class="doc" id="uk" lang="uk">
+    <h2>HVAC Charge · Підтримка</h2>
+    <p>Перегрів, переохолодження, цільовий перегрів і PT-таблиці для техніків HVAC/R. Офлайн, без облікового запису.</p>
+    <p><strong>Потрібна допомога?</strong> Напишіть на <a href="mailto:mobile.support@zhukovskyi.space">mobile.support@zhukovskyi.space</a>. Вкажіть модель телефону, холодоагент і введені покази. Зазвичай відповідаємо протягом 2 робочих днів.</p>
+
+    <h2>Питання й відповіді</h2>
+    <h3>Звідки значення тиск-температура?</h3>
+    <p>З PT-таблиць виробника Arkema (Forane), розрахованих у NIST REFPROP, перевірених за рівняннями стану NIST і таблицею Chemours для R-454B. Усі джерела перелічено в застосунку: Settings → Sources and accuracy. Поза надрукованим діапазоном (−50 °F…150 °F) застосунок не показує значення, а не вгадує.</p>
+    <h3>Чому для R-454B, R-407C та інших сумішей два значення?</h3>
+    <p>Ці суміші мають температурний глайд. Перегрів рахують від точки роси (насичена пара), переохолодження — від точки кипіння (насичена рідина); застосунок обирає потрібну сам.</p>
+    <h3>Мій цифровий манометр уже показує температуру насичення.</h3>
+    <p>Натисніть «Use sat. temp» на картці всмоктування чи рідини й введіть температуру насичення замість тиску.</p>
+    <h3>Звідки цільовий перегрів?</h3>
+    <p>З таблиці заправки за перегрівом виробника для систем із фіксованим дроселем (пістоном) — за температурою зовнішнього повітря й вологим термометром у приміщенні. Якщо в таблиці немає значення для ваших умов, застосунок про це скаже; тоді заправляйте за вагою з шильдика. Завжди дотримуйтеся таблиці заправки обладнання, яке обслуговуєте.</p>
+    <h3>Як перейти на °C і бар?</h3>
+    <p>Settings → Units. Уже введені значення перерахуються.</p>
+    <h3>Немає потрібного холодоагенту.</h3>
+    <p>Ми додаємо лише холодоагенти з опублікованою таблицею виробника, яку перевірили. Напишіть, який вам потрібен.</p>
+    <h3>Як відновити Pro на новому телефоні?</h3>
+    <p>Установіть застосунок з тим самим акаунтом Google Play або Apple ID, відкрийте Settings і натисніть «Restore purchases».</p>
+    <h3>Як скасувати підписку?</h3>
+    <p>Android: Google Play → Платежі й підписки → Підписки. iPhone: Параметри → ваше ім'я → Підписки. Скасуйте щонайменше за 24 години до кінця періоду; Pro працює до кінця оплаченого періоду. Довічний варіант — разова покупка, він не поновлюється.</p>
+    <h3>Як повернути гроші?</h3>
+    <p>Повернення обробляє магазин: <a href="https://support.google.com/googleplay/answer/2479637?hl=uk">Google Play</a> або <a href="https://reportaproblem.apple.com/">Apple</a>.</p>
+    <h3>Де зберігаються мої дані?</h3>
+    <p>Усе, що ви вводите й зберігаєте, лишається лише на вашому пристрої. Облікових записів немає, тож ми не бачимо цих даних і не можемо їх відновити. Видалення застосунку видаляє дані.</p>
+  </section>
+  <p class="muted"><a href="../index.html">Dre Dev</a> · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></p>
+</main>
+</body>
+</html>
