@@ -2,7 +2,7 @@
 
 Every folder with privacy.html, terms.html and support.html is an app. Its display name comes from the
 current index.html (the <h2> above its links), or from the <title> of its privacy page for a new app.
-Language links (uk, de) appear when the page has a section with that id.
+Language links (es, uk, de) appear when the page has a section with that id.
 Run after adding an app, or to resolve merge conflicts in index.html / README.md:  python3 tools/build_index.py
 """
 import os
@@ -15,6 +15,7 @@ LABELS = {
     'en': {'privacy': 'Privacy policy', 'terms': 'Terms of use', 'support': 'Support'},
     'uk': {'privacy': 'Політика конфіденційності', 'terms': 'Умови використання', 'support': 'Підтримка'},
     'de': {'privacy': 'Datenschutzerklärung', 'terms': 'Nutzungsbedingungen', 'support': 'Hilfe'},
+    'es': {'privacy': 'Política de privacidad', 'terms': 'Términos de uso', 'support': 'Soporte'},
 }
 
 
@@ -44,7 +45,7 @@ def apps():
 
 def langs(folder, page):
     html = read(f'{folder}/{page}.html')
-    return ['en'] + [l for l in ('uk', 'de') if f'id="{l}"' in html]
+    return ['en'] + [l for l in ('es', 'uk', 'de') if f'id="{l}"' in html]
 
 
 def section(folder, name):
