@@ -1,0 +1,160 @@
+<!doctype html>
+<!--
+  "Count down together" page for Days Until (lib/feature/together.dart). Copy this file to the policy site as
+  days-until/together/index.html (repository app_politics_and_terms), so that
+  https://andronaft-2.github.io/app_politics_and_terms/days-until/together/#e=<data> opens it.
+
+  The countdown travels after "#", which the browser never sends to the site: no server sees it and nothing is
+  stored. The page only reads it to show the event and to open the app with the same data.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Count down together · Days Until</title>
+<style>
+  :root { color-scheme: dark; --bg: #09090f; --text: #f6f4ff; --muted: #a9a6c0; --a: #6a3fd8; --b: #c2357f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 15% 0%, #2b2066 0, transparent 55%),
+    radial-gradient(circle at 100% 10%, #5a2550 0, transparent 50%), var(--bg); color: var(--text);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; }
+  main { width: 100%; max-width: 420px; padding: 40px 16px; text-align: center; }
+  .card { border-radius: 30px; padding: 22px; text-align: left; color: #fff; min-height: 220px; display: flex;
+    flex-direction: column; box-shadow: 0 14px 40px rgba(0,0,0,.4); background: linear-gradient(135deg, #1872eb, #10a0ce); }
+  .emoji { font-size: 40px; }
+  .title { font-size: 21px; font-weight: 800; margin-top: auto; }
+  .count { display: flex; align-items: baseline; gap: 10px; }
+  .num { font-size: 72px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+  .label { font-size: 13px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; opacity: .85; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  p { color: var(--muted); margin: 0 0 22px; }
+  .btn { display: block; padding: 16px; border-radius: 18px; font-weight: 800; text-decoration: none; color: #fff;
+    background: linear-gradient(90deg, var(--a), var(--b)); margin-top: 22px; }
+  .link { display: block; color: var(--text); margin-top: 14px; }
+  .small { font-size: 13px; color: var(--muted); margin-top: 18px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="h"></h1>
+  <p id="sub"></p>
+  <div class="card" id="card">
+    <div class="emoji" id="emoji"></div>
+    <div class="title" id="title"></div>
+    <div class="count"><span class="num" id="num"></span><span class="label" id="label"></span></div>
+  </div>
+  <a class="btn" id="open" href="#"></a>
+  <a class="link" id="store" href="https://play.google.com/store/apps/details?id=com.andrii.countdown"></a>
+  <div class="small" id="after"></div>
+  <div class="small" id="bad" hidden></div>
+</main>
+<script>
+(function () {
+  var PLAY = 'https://play.google.com/store/apps/details?id=com.andrii.countdown';
+  // Set once the app is in the App Store (AppConfig.appStoreId in the app).
+  var APP_STORE = '';
+  var THEMES = { ocean: ['#1872EB', '#10A0CE'], graphite: ['#4B4B5C', '#17171F'], sunset: ['#D93A4A', '#D9741F'],
+    forest: ['#0F857B', '#0EAB49'], berry: ['#8E2DE2', '#E14DC4'], peach: ['#CC4A5E', '#C47F33'],
+    night: ['#1E3C72', '#0B1426'], candy: ['#D93862', '#6479F0'] };
+  var T = {
+    en: ['Count down together', 'A friend shared this countdown with you.', 'Add to Days Until', 'Get Days Until',
+      'Just installed it? Come back here and tap the button again.', 'This link has no countdown in it.',
+      ['days left', 'day left', 'today', 'days together', 'days since']],
+    uk: ['Чекаємо разом', 'Друг поділився з вами цим відліком.', 'Додати в Days Until', 'Завантажити Days Until',
+      'Щойно встановили? Поверніться сюди й натисніть кнопку ще раз.', 'У цьому посиланні немає відліку.',
+      ['днів лишилося', 'день лишився', 'сьогодні', 'днів разом', 'днів від дати']],
+    de: ['Gemeinsam zählen', 'Jemand hat diesen Countdown mit dir geteilt.', 'Zu Days Until hinzufügen', 'Days Until holen',
+      'Gerade installiert? Komm hierher zurück und tippe noch einmal.', 'In diesem Link ist kein Countdown.',
+      ['Tage noch', 'Tag noch', 'heute', 'Tage zusammen', 'Tage seit']],
+    es: ['Contar juntos', 'Alguien ha compartido esta cuenta atrás contigo.', 'Añadir a Days Until', 'Descargar Days Until',
+      '¿Acabas de instalarla? Vuelve aquí y toca el botón otra vez.', 'Este enlace no tiene ninguna cuenta atrás.',
+      ['días restantes', 'día restante', 'hoy', 'días juntos', 'días desde']],
+    pt: ['Contar juntos', 'Alguém compartilhou esta contagem com você.', 'Adicionar ao Days Until', 'Baixar o Days Until',
+      'Acabou de instalar? Volte aqui e toque no botão de novo.', 'Este link não tem nenhuma contagem.',
+      ['dias restantes', 'dia restante', 'hoje', 'dias juntos', 'dias desde']],
+    fr: ['Compter ensemble', 'Un ami vous a partagé ce compte à rebours.', 'Ajouter à Days Until', 'Obtenir Days Until',
+      'Vous venez de l’installer ? Revenez ici et touchez à nouveau le bouton.', 'Ce lien ne contient aucun compte à rebours.',
+      ['jours restants', 'jour restant', 'aujourd’hui', 'jours ensemble', 'jours depuis']],
+    it: ['Contiamo insieme', 'Un amico ha condiviso con te questo conto alla rovescia.', 'Aggiungi a Days Until', 'Scarica Days Until',
+      'L’hai appena installata? Torna qui e tocca di nuovo il pulsante.', 'In questo link non c’è nessun conto alla rovescia.',
+      ['giorni mancanti', 'giorno mancante', 'oggi', 'giorni insieme', 'giorni da']]
+  };
+  var lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  var t = T[lang] || T.en;
+  document.documentElement.lang = T[lang] ? lang : 'en';
+  function $(id) { return document.getElementById(id); }
+  $('h').textContent = t[0];
+  $('sub').textContent = t[1];
+  $('open').textContent = t[2];
+  $('store').textContent = t[3];
+  $('after').textContent = t[4];
+
+  var m = /(?:^|[#&])e=([A-Za-z0-9_-]+)/.exec(location.hash);
+  var ev = null;
+  if (m) {
+    try {
+      var b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      ev = JSON.parse(new TextDecoder().decode(bytes));
+    } catch (e) { ev = null; }
+  }
+  if (!ev || !ev.t || !ev.d) {
+    $('card').className = 'hidden';
+    $('sub').className = 'hidden';
+    $('open').className = 'hidden';
+    $('after').className = 'hidden';
+    $('bad').hidden = false;
+    $('bad').textContent = t[5];
+    return;
+  }
+  var colors = THEMES[ev.h] || THEMES.ocean;
+  $('card').style.background = 'linear-gradient(135deg,' + colors[0] + ',' + colors[1] + ')';
+  $('emoji').textContent = ev.e || '🎉';
+  $('title').textContent = ev.t;
+
+  // Days to the date (or its next yearly repeat), as the app counts them; a count-up counts the days since.
+  var p = ev.d.split('-').map(Number);
+  var now = new Date();
+  var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  var target = Date.UTC(p[0], p[1] - 1, p[2]);
+  if (!ev.u && target < today && ev.r === 'yearly') {
+    target = Date.UTC(now.getFullYear(), p[1] - 1, p[2]);
+    if (target < today) target = Date.UTC(now.getFullYear() + 1, p[1] - 1, p[2]);
+  }
+  var days = Math.round((target - today) / 86400000);
+  var L = t[6];
+  if (ev.u && days <= 0) {
+    $('num').textContent = -days;
+    $('label').textContent = ev.c || L[4];
+  } else if (days === 0) {
+    $('num').textContent = '🎉';
+    $('label').textContent = L[2];
+  } else {
+    $('num').textContent = Math.abs(days);
+    $('label').textContent = days === 1 ? L[1] : L[0];
+  }
+
+  var data = m[1];
+  var ua = navigator.userAgent;
+  var android = /Android/i.test(ua);
+  var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (android) {
+    // Opens the app, or Google Play when it is not installed.
+    $('open').href = 'intent://add?homeWidget&e=' + data + '#Intent;scheme=daysuntil;package=com.andrii.countdown;S.browser_fallback_url=' +
+      encodeURIComponent(PLAY) + ';end';
+  } else if (ios) {
+    $('open').href = 'daysuntil://add?homeWidget&e=' + data;
+    if (APP_STORE) $('store').href = APP_STORE; else $('store').className = 'hidden';
+  } else {
+    // On a computer there is no app to open: the store page is the way.
+    $('open').href = PLAY;
+    $('after').className = 'hidden';
+    $('store').className = 'hidden';
+  }
+})();
+</script>
+</body>
+</html>
