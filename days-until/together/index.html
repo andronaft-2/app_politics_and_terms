@@ -5,7 +5,8 @@
   https://andronaft-2.github.io/app_politics_and_terms/days-until/together/#e=<data> opens it.
 
   The countdown travels after "#", which the browser never sends to the site: no server sees it and nothing is
-  stored. The page only reads it to show the event and to open the app with the same data.
+  stored. The page only reads it to show the event and to open the app with the same data. A gift link also has
+  "&n=<notes>" (Together.shareGift), which the page passes on to the app without reading.
 -->
 <html lang="en">
 <head>
@@ -137,7 +138,22 @@
     $('label').textContent = days === 1 ? L[1] : L[0];
   }
 
-  var data = m[1];
+  // A gift: the notes under the pages ride along as "n". The page never reads them: they are for the app, and
+  // for the person to find one a day.
+  var n = /[#&]n=([A-Za-z0-9_-]+)/.exec(location.hash);
+  var data = m[1] + (n ? '&n=' + n[1] : '');
+  if (n) {
+    var G = { en: ['A countdown for you', 'There are notes under its pages. Tear one off each day to read them.'],
+      uk: ['Відлік для тебе', 'Під його листками є записки. Відривай по листку на день, щоб їх прочитати.'],
+      de: ['Ein Countdown für dich', 'Unter seinen Blättern liegen Notizen. Reiß jeden Tag eins ab, um sie zu lesen.'],
+      es: ['Una cuenta atrás para ti', 'Hay notas debajo de sus hojas. Arranca una cada día para leerlas.'],
+      pt: ['Uma contagem para você', 'Há bilhetes debaixo das folhas. Arranque uma por dia para ler.'],
+      fr: ['Un compte à rebours pour toi', 'Il y a des mots sous ses feuilles. Détaches-en une chaque jour pour les lire.'],
+      it: ['Un conto alla rovescia per te', 'Sotto i suoi fogli ci sono dei biglietti. Strappane uno al giorno per leggerli.'] };
+    var g = G[lang] || G.en;
+    $('h').textContent = g[0];
+    $('sub').textContent = g[1];
+  }
   var ua = navigator.userAgent;
   var android = /Android/i.test(ua);
   var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
