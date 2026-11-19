@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiD Тест — набір питань від викладача</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .logo { background: linear-gradient(135deg, #2456d6, #f5c518); }
+  .code { font: 700 20px/1.4 ui-monospace, Menlo, monospace; letter-spacing: 2px; overflow-wrap: anywhere; background: #eef1f7; border-radius: 12px; padding: 12px 16px; margin: 12px 0; }
+  button { font: 600 16px/1 inherit; padding: 12px 18px; border-radius: 12px; border: 0; background: #2456d6; color: #fff; }
+  .stores { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 4px; }
+  .stores a, .stores span { padding: 10px 18px; border-radius: 12px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+  .stores a { background: #2456d6; color: #fff; border-color: #2456d6; }
+  .stores span { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <!-- The QR code of "Set from your teacher" in the LiD Test app (lid-test-ua-app, lib/data/class_set.dart) points
+       here. The code is after '#': browsers do not send that part to the server, so it stays on the phone. -->
+  <header><div class="logo"></div><h1>LiD Тест</h1></header>
+  <p class="muted">Набір питань від викладача · Fragenset von der Lehrkraft · Set from your teacher</p>
+
+  <div class="code" id="code">—</div>
+  <p><button id="copy" type="button">Копіювати код · Code kopieren · Copy code</button> <span id="done" class="muted"></span></p>
+
+  <section class="doc" lang="uk">
+    <p>Відкрийте застосунок LiD Тест → «Набір від викладача», вставте код і натисніть «Додати набір».</p>
+  </section>
+  <section class="doc" lang="de">
+    <p>Öffnen Sie die App LiD Test → „Set von der Lehrkraft“, fügen Sie den Code ein und tippen Sie auf „Set hinzufügen“.</p>
+  </section>
+  <section class="doc" lang="en">
+    <p>Open the LiD Test app → “Set from your teacher”, paste the code and tap “Add the set”.</p>
+  </section>
+
+  <div class="stores">
+    <a href="https://play.google.com/store/apps/details?id=com.andrii.lidtest">Google Play</a>
+    <span>App Store — незабаром</span>
+  </div>
+  <p class="muted">Неофіційний застосунок, не повʼязаний з BAMF. Inoffizielle App, nicht mit dem BAMF verbunden.</p>
+  <p class="muted"><a href="./">LiD Тест</a> · <a href="privacy.html">Конфіденційність</a></p>
+</main>
+<script>
+  // Only the characters a code can have; anything else in the address is ignored.
+  var code = (location.hash || '').replace('#', '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  document.getElementById('code').textContent = code || '—';
+  document.getElementById('copy').onclick = function () {
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(function () {
+      document.getElementById('done').textContent = '✓';
+    });
+  };
+</script>
+</body>
+</html>
