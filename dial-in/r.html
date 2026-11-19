@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Dial In · A friend's espresso setup</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .big { font-size: 26px; font-weight: 800; margin: 6px 0; }
+  .btn { display: block; text-align: center; padding: 14px; border-radius: 14px; font-weight: 800; text-decoration: none; margin: 10px 0; }
+  .primary { background: #a65b28; color: #fff; }
+  .secondary { border: 1px solid #a65b28; color: #a65b28; }
+</style>
+</head>
+<body>
+<main>
+  <!-- A shot setup shared from Dial In by QR code. Everything after "#" in this page's address stays in the
+       browser: it is never sent to this site. The page only shows it and offers to open it in the app. -->
+  <header><div class="logo" style="background: linear-gradient(135deg, #a65b28, #7a3a1c)"></div><h1 id="title">A friend's espresso setup</h1></header>
+  <section class="doc">
+    <p id="bean" class="big"></p>
+    <p id="roaster" class="muted"></p>
+    <p id="numbers" class="big"></p>
+    <p id="grind"></p>
+    <p id="why" class="muted">Same coffee, another machine and grinder: take it as a starting point.</p>
+    <a id="open" class="btn primary" href="#">Open in Dial In</a>
+    <a id="play" class="btn secondary" href="https://play.google.com/store/apps/details?id=com.andrii.dialin">Get Dial In on Google Play</a>
+    <p id="bad" class="muted" hidden>This link has no setup in it.</p>
+  </section>
+  <p class="muted"><a href="support.html">Dial In</a> · <a href="privacy.html">Privacy Policy</a></p>
+</main>
+<script>
+  (function () {
+    var uk = (navigator.language || '').toLowerCase().indexOf('uk') === 0;
+    var t = uk ? {
+      title: 'Налаштування еспресо від друга', why: 'Та сама кава, інша машина й кавомолка: це точка старту.',
+      open: 'Відкрити в Dial In', play: 'Завантажити Dial In з Google Play', bad: 'У цьому посиланні немає налаштувань.',
+      f: 'Почніть трохи дрібніше, ніж ваш звичний помел для еспресо.', u: 'Почніть зі свого звичного помелу для еспресо.',
+      c: 'Почніть трохи грубіше, ніж ваш звичний помел для еспресо.', g: 'г', s: 'с'
+    } : {
+      title: "A friend's espresso setup", why: 'Same coffee, another machine and grinder: take it as a starting point.',
+      open: 'Open in Dial In', play: 'Get Dial In on Google Play', bad: 'This link has no setup in it.',
+      f: 'Start a little finer than your usual espresso grind.', u: 'Start at your usual espresso grind.',
+      c: 'Start a little coarser than your usual espresso grind.', g: 'g', s: 's'
+    };
+    function set(id, text) { document.getElementById(id).textContent = text; }
+    set('title', t.title); set('why', t.why); set('open', t.open); set('play', t.play); set('bad', t.bad);
+    var hash = location.hash.replace(/^#/, '');
+    var q = {};
+    hash.split('&').forEach(function (p) {
+      var i = p.indexOf('=');
+      if (i > 0) { try { q[p.slice(0, i)] = decodeURIComponent(p.slice(i + 1)); } catch (e) {} }
+    });
+    var d = parseFloat(q.d), y = parseFloat(q.y);
+    if (!(d > 0 && y > 0)) {
+      document.getElementById('bad').hidden = false;
+      document.getElementById('open').hidden = true;
+      return;
+    }
+    set('bean', q.n || '');
+    set('roaster', q.r || '');
+    var parts = [d + ' ' + t.g + ' → ' + y + ' ' + t.g];
+    if (parseFloat(q.t) > 0) parts.push(q.t + ' ' + t.s);
+    if (parseFloat(q.c) > 0) parts.push(q.c + ' °C');
+    set('numbers', parts.join(' · '));
+    set('grind', t[q.g] || t.u);
+    document.getElementById('open').href = 'dialin://dial.in/recipe?' + hash;
+  })();
+</script>
+</body>
+</html>
