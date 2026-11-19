@@ -9,7 +9,8 @@
 
   <data> is base64url (no padding) of JSON, version 1: n name, y lye (n NaOH, k KOH, d both), k KOH share %,
   s superfat %, w [mode c|r|p, value, water discount %], f fragrance % of oils, p total oils in grams when the oils
-  are given in %, o [[oil id or index into c, grams or %]], a [[additive, % of oils, name, INCI]],
+  are given in %, o [[oil id or index into c, grams or %]], a [[additive, % of oils, name, INCI]] (an acid, ca la vi: [code, % of oils, % acid strength]),
+  q [liquid code gm cm b a co x, own name, own INCI] only when the lye liquid is not water,
   c [[name, SAP KOH, iodine, INS, [8 fatty acids]]] the sender's own oils, t [lye °C, oils °C],
   r [NaOH, KOH, water, fragrance] in grams as the sender's app worked them out.
   Labels come from the app's own texts (lib/l10n/app_*.arb); oil names from lib/feature/oil_data.dart.
@@ -81,7 +82,7 @@
   "waterModeConcentration": "Lye concentration",
   "waterModeRatio": "Water : lye ratio",
   "waterModePercent": "Water as % of oils",
-  "weighSafety": "Goggles and gloves on. Add lye to water, never water to lye, and stir in a ventilated place.",
+  "weighSafety": "Goggles and gloves on. Add lye to the liquid, never the liquid to the lye, and stir in a ventilated place.",
   "pdfFooter": "Made with Lye Calc. Check new recipes with a second lye calculator before you weigh lye.",
   "untitledRecipe": "New recipe",
   "additiveSodiumLactate": "Sodium lactate",
@@ -89,6 +90,16 @@
   "additiveHoney": "Honey",
   "additiveSalt": "Salt",
   "additiveKaolin": "Kaolin clay",
+  "additiveCitricAcid": "Citric acid",
+  "additiveLacticAcid": "Lactic acid",
+  "additiveVinegar": "Vinegar",
+  "acidStrength": "Acid strength",
+  "liquidLabel": "Liquid for the lye",
+  "liquidGoatMilk": "Goat milk",
+  "liquidCowMilk": "Cow's milk",
+  "liquidBeer": "Beer",
+  "liquidAloe": "Aloe vera juice",
+  "liquidCoconutMilk": "Coconut milk",
   "additiveOther": "Other additive",
   "title": "Soap recipe",
   "sub": "Someone shared this soap recipe with you from Lye Calc.",
@@ -113,7 +124,7 @@
   "waterModeConcentration": "Концентрація лугу",
   "waterModeRatio": "Співвідношення вода : луг",
   "waterModePercent": "Вода у % від олій",
-  "weighSafety": "Окуляри й рукавички вдягнено. Луг — у воду, ніколи не воду в луг, і розмішуйте в провітрюваному місці.",
+  "weighSafety": "Окуляри й рукавички вдягнено. Луг — у рідину, ніколи не рідину в луг, і розмішуйте в провітрюваному місці.",
   "pdfFooter": "Зроблено в Lye Calc. Перш ніж зважувати луг, перевірте новий рецепт другим калькулятором.",
   "untitledRecipe": "Новий рецепт",
   "additiveSodiumLactate": "Лактат натрію",
@@ -121,6 +132,16 @@
   "additiveHoney": "Мед",
   "additiveSalt": "Сіль",
   "additiveKaolin": "Каолінова глина",
+  "additiveCitricAcid": "Лимонна кислота",
+  "additiveLacticAcid": "Молочна кислота",
+  "additiveVinegar": "Оцет",
+  "acidStrength": "Міцність кислоти",
+  "liquidLabel": "Рідина для лугу",
+  "liquidGoatMilk": "Козяче молоко",
+  "liquidCowMilk": "Коров'яче молоко",
+  "liquidBeer": "Пиво",
+  "liquidAloe": "Сік алое вера",
+  "liquidCoconutMilk": "Кокосове молоко",
   "additiveOther": "Інша добавка",
   "title": "Рецепт мила",
   "sub": "Хтось поділився з вами цим рецептом мила з Lye Calc.",
@@ -145,7 +166,7 @@
   "waterModeConcentration": "Laugenkonzentration",
   "waterModeRatio": "Verhältnis Wasser : Lauge",
   "waterModePercent": "Wasser in % der Öle",
-  "weighSafety": "Schutzbrille und Handschuhe an. Lauge ins Wasser, nie Wasser in die Lauge, und bei guter Lüftung rühren.",
+  "weighSafety": "Schutzbrille und Handschuhe an. Lauge in die Flüssigkeit, nie die Flüssigkeit in die Lauge, und bei guter Lüftung rühren.",
   "pdfFooter": "Erstellt mit Lye Calc. Prüfe neue Rezepte mit einem zweiten Laugenrechner, bevor du die Lauge abwiegst.",
   "untitledRecipe": "Neues Rezept",
   "additiveSodiumLactate": "Natriumlactat",
@@ -153,6 +174,16 @@
   "additiveHoney": "Honig",
   "additiveSalt": "Salz",
   "additiveKaolin": "Kaolin (Tonerde)",
+  "additiveCitricAcid": "Zitronensäure",
+  "additiveLacticAcid": "Milchsäure",
+  "additiveVinegar": "Essig",
+  "acidStrength": "Säuregehalt",
+  "liquidLabel": "Flüssigkeit für die Lauge",
+  "liquidGoatMilk": "Ziegenmilch",
+  "liquidCowMilk": "Kuhmilch",
+  "liquidBeer": "Bier",
+  "liquidAloe": "Aloe-vera-Saft",
+  "liquidCoconutMilk": "Kokosmilch",
   "additiveOther": "Anderer Zusatz",
   "title": "Seifenrezept",
   "sub": "Jemand hat dieses Seifenrezept aus Lye Calc mit dir geteilt.",
@@ -177,7 +208,7 @@
   "waterModeConcentration": "Concentración de sosa",
   "waterModeRatio": "Proporción agua : sosa",
   "waterModePercent": "Agua en % de los aceites",
-  "weighSafety": "Gafas y guantes puestos. Sosa al agua, nunca agua a la sosa, y remueve en un lugar ventilado.",
+  "weighSafety": "Gafas y guantes puestos. Sosa al líquido, nunca el líquido a la sosa, y remueve en un lugar ventilado.",
   "pdfFooter": "Hecho con Lye Calc. Comprueba las recetas nuevas con otra calculadora antes de pesar la sosa.",
   "untitledRecipe": "Receta nueva",
   "additiveSodiumLactate": "Lactato de sodio",
@@ -185,6 +216,16 @@
   "additiveHoney": "Miel",
   "additiveSalt": "Sal",
   "additiveKaolin": "Arcilla caolín",
+  "additiveCitricAcid": "Ácido cítrico",
+  "additiveLacticAcid": "Ácido láctico",
+  "additiveVinegar": "Vinagre",
+  "acidStrength": "Concentración del ácido",
+  "liquidLabel": "Líquido para la sosa",
+  "liquidGoatMilk": "Leche de cabra",
+  "liquidCowMilk": "Leche de vaca",
+  "liquidBeer": "Cerveza",
+  "liquidAloe": "Jugo de aloe vera",
+  "liquidCoconutMilk": "Leche de coco",
   "additiveOther": "Otro aditivo",
   "title": "Receta de jabón",
   "sub": "Alguien ha compartido contigo esta receta de jabón desde Lye Calc.",
@@ -209,7 +250,7 @@
   "waterModeConcentration": "Concentration de la solution",
   "waterModeRatio": "Rapport eau : soude",
   "waterModePercent": "Eau en % des huiles",
-  "weighSafety": "Lunettes et gants. La soude dans l’eau, jamais l’eau sur la soude, et mélangez dans un endroit aéré.",
+  "weighSafety": "Lunettes et gants. La soude dans le liquide, jamais le liquide sur la soude, et mélangez dans un endroit aéré.",
   "pdfFooter": "Fait avec Lye Calc. Vérifiez toute nouvelle recette avec un second calculateur avant de peser la soude.",
   "untitledRecipe": "Nouvelle recette",
   "additiveSodiumLactate": "Lactate de sodium",
@@ -217,6 +258,16 @@
   "additiveHoney": "Miel",
   "additiveSalt": "Sel",
   "additiveKaolin": "Argile kaolin",
+  "additiveCitricAcid": "Acide citrique",
+  "additiveLacticAcid": "Acide lactique",
+  "additiveVinegar": "Vinaigre",
+  "acidStrength": "Concentration de l’acide",
+  "liquidLabel": "Liquide pour la soude",
+  "liquidGoatMilk": "Lait de chèvre",
+  "liquidCowMilk": "Lait de vache",
+  "liquidBeer": "Bière",
+  "liquidAloe": "Jus d’aloe vera",
+  "liquidCoconutMilk": "Lait de coco",
   "additiveOther": "Autre additif",
   "title": "Recette de savon",
   "sub": "Quelqu’un vous a partagé cette recette de savon depuis Lye Calc.",
@@ -241,7 +292,7 @@
   "waterModeConcentration": "Concentração da soda",
   "waterModeRatio": "Proporção água : soda",
   "waterModePercent": "Água em % dos óleos",
-  "weighSafety": "Óculos e luvas. Soda na água, nunca água na soda, e misture em local ventilado.",
+  "weighSafety": "Óculos e luvas. Soda no líquido, nunca o líquido na soda, e misture em local ventilado.",
   "pdfFooter": "Feito com Lye Calc. Confira receitas novas em outra calculadora antes de pesar a soda.",
   "untitledRecipe": "Nova receita",
   "additiveSodiumLactate": "Lactato de sódio",
@@ -249,6 +300,16 @@
   "additiveHoney": "Mel",
   "additiveSalt": "Sal",
   "additiveKaolin": "Argila caulim",
+  "additiveCitricAcid": "Ácido cítrico",
+  "additiveLacticAcid": "Ácido lático",
+  "additiveVinegar": "Vinagre",
+  "acidStrength": "Concentração do ácido",
+  "liquidLabel": "Líquido para a soda",
+  "liquidGoatMilk": "Leite de cabra",
+  "liquidCowMilk": "Leite de vaca",
+  "liquidBeer": "Cerveja",
+  "liquidAloe": "Suco de aloe vera",
+  "liquidCoconutMilk": "Leite de coco",
   "additiveOther": "Outro aditivo",
   "title": "Receita de sabão",
   "sub": "Alguém compartilhou com você esta receita de sabão do Lye Calc.",
@@ -273,7 +334,7 @@
   "waterModeConcentration": "Concentrazione della soda",
   "waterModeRatio": "Rapporto acqua : soda",
   "waterModePercent": "Acqua come % degli oli",
-  "weighSafety": "Occhiali e guanti. Aggiungi la soda all’acqua, mai l’acqua alla soda, e mescola in un luogo ventilato.",
+  "weighSafety": "Occhiali e guanti. Aggiungi la soda al liquido, mai il liquido alla soda, e mescola in un luogo ventilato.",
   "pdfFooter": "Creato con Lye Calc. Controlla le nuove ricette con un secondo calcolatore di soda prima di pesare la soda.",
   "untitledRecipe": "Nuova ricetta",
   "additiveSodiumLactate": "Lattato di sodio",
@@ -281,6 +342,16 @@
   "additiveHoney": "Miele",
   "additiveSalt": "Sale",
   "additiveKaolin": "Argilla caolino",
+  "additiveCitricAcid": "Acido citrico",
+  "additiveLacticAcid": "Acido lattico",
+  "additiveVinegar": "Aceto",
+  "acidStrength": "Concentrazione dell’acido",
+  "liquidLabel": "Liquido per la soda",
+  "liquidGoatMilk": "Latte di capra",
+  "liquidCowMilk": "Latte vaccino",
+  "liquidBeer": "Birra",
+  "liquidAloe": "Succo di aloe vera",
+  "liquidCoconutMilk": "Latte di cocco",
   "additiveOther": "Altro additivo",
   "title": "Ricetta di sapone",
   "sub": "Qualcuno ha condiviso con te questa ricetta di sapone da Lye Calc.",
@@ -294,8 +365,11 @@
  }
 };
   var OILS = {"olive":"Olive oil","olive_pomace":"Olive oil, pomace","coconut76":"Coconut oil, 76°","coconut92":"Coconut oil, 92°","coconut_fractionated":"Coconut oil, fractionated","palm":"Palm oil","palm_kernel":"Palm kernel oil","castor":"Castor oil","shea":"Shea butter","shea_oil":"Shea oil, fractionated","cocoa":"Cocoa butter","mango_butter":"Mango butter","lard":"Lard","tallow_beef":"Beef tallow","tallow_sheep":"Sheep tallow","almond":"Sweet almond oil","avocado":"Avocado oil","avocado_butter":"Avocado butter","sunflower":"Sunflower oil","sunflower_ho":"Sunflower oil, high oleic","rice_bran":"Rice bran oil","canola":"Canola oil","canola_ho":"Canola oil, high oleic","rapeseed":"Rapeseed oil, unrefined","babassu":"Babassu oil","apricot":"Apricot kernel oil","argan":"Argan oil","baobab":"Baobab oil","beeswax":"Beeswax","black_cumin":"Black cumin seed oil","borage":"Borage oil","brazil_nut":"Brazil nut oil","camelina":"Camelina seed oil","camellia":"Camellia seed oil","candelilla":"Candelilla wax","chicken_fat":"Chicken fat","corn":"Corn oil","cottonseed":"Cottonseed oil","cupuacu":"Cupuaçu butter","duck_fat":"Duck fat","emu":"Emu oil","evening_primrose":"Evening primrose oil","ghee":"Ghee","goose_fat":"Goose fat","grapeseed":"Grapeseed oil","hazelnut":"Hazelnut oil","hemp":"Hemp seed oil","illipe":"Illipe butter","jojoba":"Jojoba oil","kokum":"Kokum butter","kukui":"Kukui nut oil","lanolin":"Lanolin","macadamia":"Macadamia nut oil","marula":"Marula oil","meadowfoam":"Meadowfoam seed oil","moringa":"Moringa oil","murumuru":"Murumuru butter","neem":"Neem oil","oat":"Oat oil","passion_fruit":"Passion fruit seed oil","peach_kernel":"Peach kernel oil","peanut":"Peanut oil","pistachio":"Pistachio oil","pomegranate":"Pomegranate seed oil","poppy":"Poppy seed oil","pumpkin":"Pumpkin seed oil","raspberry":"Raspberry seed oil","rosehip":"Rosehip oil","safflower":"Safflower oil","safflower_ho":"Safflower oil, high oleic","sea_buckthorn":"Sea buckthorn seed oil","sesame":"Sesame oil","soybean":"Soybean oil","soy_wax":"Soy wax (fully hydrogenated)","stearic_acid":"Stearic acid","tamanu":"Tamanu oil","walnut":"Walnut oil","wheat_germ":"Wheat germ oil"};
-  var ADDITIVES = { sl: 'additiveSodiumLactate', su: 'additiveSugar', h: 'additiveHoney', sa: 'additiveSalt', ka: 'additiveKaolin', x: 'additiveOther' };
-  var ADDITIVES_EN = { sl: 'Sodium lactate', su: 'Sugar', h: 'Honey', sa: 'Salt', ka: 'Kaolin clay', x: 'Other additive' };
+  var ADDITIVES = { sl: 'additiveSodiumLactate', su: 'additiveSugar', h: 'additiveHoney', sa: 'additiveSalt', ka: 'additiveKaolin', ca: 'additiveCitricAcid', la: 'additiveLacticAcid', vi: 'additiveVinegar', x: 'additiveOther' };
+  var ADDITIVES_EN = { sl: 'Sodium lactate', su: 'Sugar', h: 'Honey', sa: 'Salt', ka: 'Kaolin clay', ca: 'Citric acid', la: 'Lactic acid', vi: 'Vinegar', x: 'Other additive' };
+  var LIQUIDS = { gm: 'liquidGoatMilk', cm: 'liquidCowMilk', b: 'liquidBeer', a: 'liquidAloe', co: 'liquidCoconutMilk' };
+  var LIQUIDS_EN = { gm: 'goat milk', cm: 'cow\u2019s milk', b: 'beer', a: 'aloe vera juice', co: 'coconut milk' };
+  var ACIDS = { ca: 1, la: 1, vi: 1 };
 
   var lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
   var t = T[lang] || T.en;
@@ -354,12 +428,17 @@
 
   var lye = { n: t.lyeNaohShort, k: t.lyeKohShort, d: t.lyeDualShort }[r.y] || '';
   if (r.y === 'd' && isNum(r.k)) lye += ' (KOH ' + num(r.k) + ' %)';
+  // q [liquid code, own name, own INCI]: milk, beer... in the place of water; the amounts are the same as for water.
+  var q = Array.isArray(r.q) && typeof r.q[0] === 'string' ? r.q : null;
+  var liquid = q && (LIQUIDS[q[0]] || (q[0] === 'x' && q[1])) ? (q[0] === 'x' ? String(q[1]) : t[LIQUIDS[q[0]]]) : null;
+  var liquidEn = q && (LIQUIDS_EN[q[0]] || (q[0] === 'x' && q[1])) ? (q[0] === 'x' ? String(q[1]) : LIQUIDS_EN[q[0]]) : null;
   var w = Array.isArray(r.w) ? r.w : [];
   var water = w[0] === 'c' ? [t.waterModeConcentration, num(w[1]) + ' %']
     : w[0] === 'r' ? [t.waterModeRatio, num(w[1]) + ' : 1']
     : w[0] === 'p' ? [t.waterModePercent, num(w[1]) + ' %'] : null;
   var settings = [[t.lyeTitle, lye]];
   if (isNum(r.s)) settings.push([t.superfat, num(r.s) + ' %']);
+  if (liquid) settings.push([t.liquidLabel, liquid]);
   if (water) settings.push(water);
   if (isNum(r.f) && r.f > 0) settings.push([t.fragrance, num(r.f) + ' %']);
   section(t.lyeTitle, settings);
@@ -370,14 +449,15 @@
 
   var additives = (Array.isArray(r.a) ? r.a : []).filter(function (a) { return Array.isArray(a) && isNum(a[1]); });
   function additiveName(a, en) { return a[0] === 'x' && a[2] ? String(a[2]) : (en ? ADDITIVES_EN[a[0]] : t[ADDITIVES[a[0]]]) || ''; }
-  section(t.additivesTitle, additives.map(function (a) { return [additiveName(a, false), num(a[1]) + ' %']; }));
+  function acidStrength(a, en) { return ACIDS[a[0]] && isNum(a[2]) && a[2] > 0 && a[2] <= 100 ? (en ? ' (' + numEn(a[2]) + '% acid)' : ' · ' + t.acidStrength + ' ' + num(a[2]) + ' %') : ''; }
+  section(t.additivesTitle, additives.map(function (a) { return [additiveName(a, false), num(a[1]) + ' %' + acidStrength(a, false)]; }));
 
   var made = Array.isArray(r.r) && r.r.length === 4 && r.r.every(isNum) ? r.r : null;
   if (made) {
     var rows = [];
     if (made[0] > 0) rows.push(['NaOH', num(made[0]) + ' g']);
     if (made[1] > 0) rows.push(['KOH', num(made[1]) + ' g']);
-    rows.push([t.water, num(made[2]) + ' g']);
+    rows.push([liquid || t.water, num(made[2]) + ' g']);
     if (made[3] > 0) rows.push([t.fragrance, num(made[3]) + ' g']);
     section(t.senderLye, rows);
   }
@@ -395,13 +475,13 @@
   text.push('');
   r.o.forEach(function (o) { text.push('• ' + oilName(o[0]) + ' ' + numEn(o[1]) + (byPercent ? '%' : ' g')); });
   if (byPercent) text.push('Oils total ' + numEn(r.p) + ' g');
-  additives.forEach(function (a) { text.push('• ' + additiveName(a, true) + ' ' + numEn(a[1]) + '% of oils'); });
+  additives.forEach(function (a) { text.push('• ' + additiveName(a, true) + ' ' + numEn(a[1]) + '% of oils' + acidStrength(a, true)); });
   if (made) {
     text.push('');
-    text.push('Lye and water (sender’s Lye Calc): ' + [
+    text.push('Lye and ' + (liquidEn || 'water') + ' (sender’s Lye Calc): ' + [
       made[0] > 0 ? 'NaOH ' + numEn(made[0]) + ' g' : null,
       made[1] > 0 ? 'KOH ' + numEn(made[1]) + ' g' : null,
-      'water ' + numEn(made[2]) + ' g'
+      (liquidEn || 'water') + ' ' + numEn(made[2]) + ' g'
     ].filter(Boolean).join(', '));
   }
   text.push('');
