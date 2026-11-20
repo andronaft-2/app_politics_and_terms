@@ -49,12 +49,13 @@
     <p>What is deleted and when: "Leave shared countdown" on the event, deleting the event or turning pokes off deletes your row from the server at once (or the next time the app is online). When the last person leaves, the whole shared countdown is deleted. Every shared countdown is also deleted two days after its event's day.</p>
     <h2>Backups</h2>
     <p>If you tap "Back up events" in Settings, the app creates a file on your device with your events, notes and background photos and opens your phone's share menu, so you can save it where you choose (for example Files, Google Drive or email). The file is not sent to us. If you tap "Restore from a backup", the app reads only the file you pick and adds its events to the ones already on your device.</p>
+    <p>If you turn on "Weekly copy to a folder", you pick one folder once with your phone's own folder picker (in Files on iPhone, or any folder or cloud drive on Android). The app then writes the same backup file, "Days Until backup.json", into that folder about once a week when you open it, replacing the previous copy. The app can write only to the folder you picked; it needs no storage permission. If that folder belongs to a cloud drive (for example iCloud Drive or Google Drive), the file is stored there under that provider's policy. The file is never sent to us. You can turn the copy off in Settings at any time.</p>
 
     <h2>Permissions</h2>
     <ul>
       <li>Notifications: for reminders before your events and milestone celebrations. You can turn them off at any time in system settings.</li>
       <li>Photos: only the photo you pick for an event background is read.</li>
-      <li>Files: only the backup file you pick is read.</li>
+      <li>Files: only the backup file you pick is read, and only the folder you pick for the weekly copy is written to.</li>
       <li>Internet: to verify subscriptions and, if you use them, for pokes.</li>
     </ul>
 
@@ -69,7 +70,7 @@
 
     <h2>Contact</h2>
     <p>Days Until is published by Dre Dev. Questions: <a href="mailto:mobile.support@zhukovskyi.space">mobile.support@zhukovskyi.space</a>.</p>
-    <p>If you write to us from the app (Settings → Contact support), the email already ends with a few lines: your phone's platform, whether a Days Until widget is placed, how many events you have and whether Pro is active. No event names, dates or photos. You see these lines before sending and can delete them; they help us answer and tell us whether widgets are easy to add.</p>
+    <p>If you write to us from the app (Settings → Contact support), the email already ends with a few lines: your phone's platform, its model and system version, whether a Days Until widget is placed, how many widgets are on the screen and when one last updated, how many events you have and whether Pro is active. No event names, dates or photos. You see these lines before sending and can delete them; they help us answer, find out why a widget got stuck on a particular phone, and tell us whether widgets are easy to add. "Check widgets" in Settings looks at the same widget information on your phone only and sends nothing.</p>
   </section>
 
   <section class="doc" id="uk">
@@ -108,12 +109,13 @@
     <p>Що й коли видаляється: «Вийти зі спільного відліку» на події, видалення події або вимкнення стуків одразу видаляє ваш рядок із сервера (або коли застосунок наступного разу буде онлайн). Коли виходить остання людина, видаляється весь спільний відлік. Кожен спільний відлік також видаляється через два дні після дня події.</p>
     <h2>Резервні копії</h2>
     <p>Якщо в налаштуваннях натиснути «Зберегти резервну копію», застосунок створить на пристрої файл із вашими подіями, нотатками й фото для фону та відкриє системне меню «Поділитися», щоб ви зберегли його там, де забажаєте (наприклад, у Файлах, на Google Диску чи в пошті). Нам цей файл не надсилається. Якщо натиснути «Відновити з резервної копії», застосунок прочитає лише вибраний вами файл і додасть його події до тих, що вже є на пристрої.</p>
+    <p>Якщо ввімкнути «Щотижнева копія в папку», ви один раз обираєте папку системним вікном вибору (у «Файлах» на iPhone або будь-яку папку чи хмарний диск на Android). Далі застосунок приблизно раз на тиждень, коли ви його відкриваєте, записує в цю папку той самий файл резервної копії «Days Until backup.json» замість попереднього. Застосунок може писати лише в обрану вами папку; дозвіл на доступ до пам'яті йому не потрібен. Якщо папка лежить на хмарному диску (наприклад, iCloud Drive чи Google Диск), файл зберігається там за правилами цього сервісу. Нам цей файл ніколи не надсилається. Вимкнути копію можна будь-коли в налаштуваннях.</p>
 
     <h2>Дозволи</h2>
     <ul>
       <li>Сповіщення: нагадування перед подіями та святкування ювілеїв. Їх можна вимкнути будь-коли в налаштуваннях системи.</li>
       <li>Фото: застосунок читає лише те фото, яке ви обрали для фону події.</li>
-      <li>Файли: застосунок читає лише файл резервної копії, який ви обрали.</li>
+      <li>Файли: застосунок читає лише файл резервної копії, який ви обрали, і пише лише в папку, яку ви обрали для щотижневої копії.</li>
       <li>Інтернет: для перевірки підписки і, якщо ви ними користуєтеся, для стуків.</li>
     </ul>
 
@@ -128,7 +130,7 @@
 
     <h2>Контакти</h2>
     <p>Days Until публікує Dre Dev. Питання: <a href="mailto:mobile.support@zhukovskyi.space">mobile.support@zhukovskyi.space</a>.</p>
-    <p>Якщо ви пишете нам із застосунку (Налаштування → «Написати в підтримку»), лист уже містить кілька рядків у кінці: платформу телефона, чи додано віджет Days Until, скільки у вас подій і чи активний Pro. Без назв подій, дат і фото. Ви бачите ці рядки перед відправкою й можете їх видалити; вони допомагають нам відповісти й зрозуміти, чи легко додати віджет.</p>
+    <p>Якщо ви пишете нам із застосунку (Налаштування → «Написати в підтримку»), лист уже містить кілька рядків у кінці: платформу телефона, його модель і версію системи, чи додано віджет Days Until, скільки віджетів на екрані й коли один із них востаннє оновився, скільки у вас подій і чи активний Pro. Без назв подій, дат і фото. Ви бачите ці рядки перед відправкою й можете їх видалити; вони допомагають нам відповісти, з'ясувати, чому віджет застряг на певному телефоні, і зрозуміти, чи легко додати віджет. «Перевірити віджети» в налаштуваннях дивиться ті самі дані про віджети лише на вашому телефоні й нічого не надсилає.</p>
   </section>
 </main>
 </body>
