@@ -1,0 +1,538 @@
+<!doctype html>
+<!--
+  Shared soap recipe page for Lye Calc (soapcalc-app, lib/feature/recipe_link.dart). A recipe shared by QR code is
+  https://andronaft-2.github.io/app_politics_and_terms/lye-calc/r.html#<data>.
+
+  The recipe travels after "#", which the browser never sends to the site: no server sees it and nothing is stored.
+  The page decodes it here, shows it as text, copies it as text the app's "Paste recipe" reads, and opens the app
+  with the same data (lyecalc://recipe/<data>). No trackers, no scripts or fonts from anywhere else.
+
+  <data> is base64url (no padding) of JSON, version 1: n name, y lye (n NaOH, k KOH, d both), k KOH share %,
+  s superfat %, w [mode c|r|p, value, water discount %], f fragrance % of oils, p total oils in grams when the oils
+  are given in %, o [[oil id or index into c, grams or %]], a [[additive, % of oils, name, INCI]] (an acid, ca la vi: [code, % of oils, % acid strength]),
+  q [liquid code gm cm b a co x, own name, own INCI] only when the lye liquid is not water,
+  c [[name, SAP KOH, iodine, INS, [8 fatty acids]]] the sender's own oils, t [lye °C, oils °C],
+  r [NaOH, KOH, water, fragrance] in grams as the sender's app worked them out.
+  Labels come from the app's own texts (lib/l10n/app_*.arb); oil names from lib/feature/oil_data.dart.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Soap recipe · Lye Calc</title>
+<style>
+  :root { --bg: #f6f3ec; --card: #fff; --text: #1d2621; --muted: #5f6a64; --line: #ddd6ca; --green: #3f7155; --warn: #b26a00; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121714; --card: #1b221e; --text: #edf1ee; --muted: #a9b4ad; --line: #34403a; --green: #7fb894; --warn: #f0a845; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 560px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 26px; line-height: 1.2; margin: 0 0 4px; overflow-wrap: anywhere; }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 8px 18px 14px; margin: 18px 0; }
+  h2 { font-size: 13px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row b { white-space: nowrap; }
+  .safety { border: 1.5px solid var(--warn); border-radius: 12px; padding: 10px 12px; margin: 18px 0; }
+  .btn { display: block; width: 100%; text-align: center; padding: 15px; border-radius: 16px; font: inherit; font-weight: 700;
+    text-decoration: none; border: 0; cursor: pointer; margin-top: 12px; }
+  .primary { background: var(--green); color: #fff; }
+  .secondary { background: transparent; color: var(--green); border: 1.5px solid var(--green); }
+  .small { font-size: 14px; color: var(--muted); margin-top: 12px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <p class="muted" id="kicker"></p>
+  <h1 id="name"></h1>
+  <p class="muted" id="sub"></p>
+  <div id="recipe" class="hidden">
+    <a class="btn primary" id="open" href="#"></a>
+    <div class="card" id="card"></div>
+    <div class="safety" id="safety"></div>
+    <button class="btn secondary" id="copy" type="button"></button>
+    <div class="small" id="copied" role="status"></div>
+    <a class="btn secondary" id="play" href="https://play.google.com/store/apps/details?id=com.andrii.soapcalc"></a>
+    <a class="btn secondary hidden" id="appstore" href="#"></a>
+    <div class="small" id="after"></div>
+    <div class="small" id="footer"></div>
+  </div>
+</main>
+<script>
+(function () {
+  var PLAY = 'https://play.google.com/store/apps/details?id=com.andrii.soapcalc';
+  // Set once Lye Calc is in the App Store: the numeric id from App Store Connect (AppConfig.appStoreId in the app).
+  var APP_STORE_ID = '';
+  var T = {
+ "en": {
+  "oilsTitle": "Oils & fats",
+  "superfat": "Superfat",
+  "fragrance": "Fragrance",
+  "additivesTitle": "Additives",
+  "water": "Water",
+  "lyeTitle": "Lye",
+  "lyeNaohShort": "NaOH · bar",
+  "lyeKohShort": "KOH · liquid",
+  "lyeDualShort": "Both",
+  "waterModeConcentration": "Lye concentration",
+  "waterModeRatio": "Water : lye ratio",
+  "waterModePercent": "Water as % of oils",
+  "weighSafety": "Goggles and gloves on. Add lye to the liquid, never the liquid to the lye, and stir in a ventilated place.",
+  "pdfFooter": "Made with Lye Calc. Check new recipes with a second lye calculator before you weigh lye.",
+  "untitledRecipe": "New recipe",
+  "additiveSodiumLactate": "Sodium lactate",
+  "additiveSugar": "Sugar",
+  "additiveHoney": "Honey",
+  "additiveSalt": "Salt",
+  "additiveKaolin": "Kaolin clay",
+  "additiveCitricAcid": "Citric acid",
+  "additiveLacticAcid": "Lactic acid",
+  "additiveVinegar": "Vinegar",
+  "acidStrength": "Acid strength",
+  "liquidLabel": "Liquid for the lye",
+  "liquidGoatMilk": "Goat milk",
+  "liquidCowMilk": "Cow's milk",
+  "liquidBeer": "Beer",
+  "liquidAloe": "Aloe vera juice",
+  "liquidCoconutMilk": "Coconut milk",
+  "additiveOther": "Other additive",
+  "title": "Soap recipe",
+  "sub": "Someone shared this soap recipe with you from Lye Calc.",
+  "open": "Open in Lye Calc",
+  "get": "Get Lye Calc",
+  "copy": "Copy recipe",
+  "copied": "Copied. In Lye Calc, open the menu and tap “Paste recipe text”.",
+  "after": "Just installed it? Come back here and tap the button again.",
+  "bad": "This link has no recipe in it, or it was cut off. Ask for the code or the link again.",
+  "senderLye": "Lye and water, as the sender’s Lye Calc worked them out"
+ },
+ "uk": {
+  "oilsTitle": "Олії й жири",
+  "superfat": "Пережир",
+  "fragrance": "Аромат",
+  "additivesTitle": "Добавки",
+  "water": "Вода",
+  "lyeTitle": "Луг",
+  "lyeNaohShort": "NaOH · тверде",
+  "lyeKohShort": "KOH · рідке",
+  "lyeDualShort": "Обидва",
+  "waterModeConcentration": "Концентрація лугу",
+  "waterModeRatio": "Співвідношення вода : луг",
+  "waterModePercent": "Вода у % від олій",
+  "weighSafety": "Окуляри й рукавички вдягнено. Луг — у рідину, ніколи не рідину в луг, і розмішуйте в провітрюваному місці.",
+  "pdfFooter": "Зроблено в Lye Calc. Перш ніж зважувати луг, перевірте новий рецепт другим калькулятором.",
+  "untitledRecipe": "Новий рецепт",
+  "additiveSodiumLactate": "Лактат натрію",
+  "additiveSugar": "Цукор",
+  "additiveHoney": "Мед",
+  "additiveSalt": "Сіль",
+  "additiveKaolin": "Каолінова глина",
+  "additiveCitricAcid": "Лимонна кислота",
+  "additiveLacticAcid": "Молочна кислота",
+  "additiveVinegar": "Оцет",
+  "acidStrength": "Міцність кислоти",
+  "liquidLabel": "Рідина для лугу",
+  "liquidGoatMilk": "Козяче молоко",
+  "liquidCowMilk": "Коров'яче молоко",
+  "liquidBeer": "Пиво",
+  "liquidAloe": "Сік алое вера",
+  "liquidCoconutMilk": "Кокосове молоко",
+  "additiveOther": "Інша добавка",
+  "title": "Рецепт мила",
+  "sub": "Хтось поділився з вами цим рецептом мила з Lye Calc.",
+  "open": "Відкрити в Lye Calc",
+  "get": "Завантажити Lye Calc",
+  "copy": "Скопіювати рецепт",
+  "copied": "Скопійовано. У Lye Calc відкрийте меню й натисніть «Вставити текст рецепта».",
+  "after": "Щойно встановили? Поверніться сюди й натисніть кнопку ще раз.",
+  "bad": "У цьому посиланні немає рецепта, або воно обрізане. Попросіть код чи посилання ще раз.",
+  "senderLye": "Луг і вода, як їх порахував Lye Calc відправника"
+ },
+ "de": {
+  "oilsTitle": "Öle & Fette",
+  "superfat": "Überfettung",
+  "fragrance": "Duft",
+  "additivesTitle": "Zusätze",
+  "water": "Wasser",
+  "lyeTitle": "Lauge",
+  "lyeNaohShort": "NaOH · fest",
+  "lyeKohShort": "KOH · flüssig",
+  "lyeDualShort": "Beides",
+  "waterModeConcentration": "Laugenkonzentration",
+  "waterModeRatio": "Verhältnis Wasser : Lauge",
+  "waterModePercent": "Wasser in % der Öle",
+  "weighSafety": "Schutzbrille und Handschuhe an. Lauge in die Flüssigkeit, nie die Flüssigkeit in die Lauge, und bei guter Lüftung rühren.",
+  "pdfFooter": "Erstellt mit Lye Calc. Prüfe neue Rezepte mit einem zweiten Laugenrechner, bevor du die Lauge abwiegst.",
+  "untitledRecipe": "Neues Rezept",
+  "additiveSodiumLactate": "Natriumlactat",
+  "additiveSugar": "Zucker",
+  "additiveHoney": "Honig",
+  "additiveSalt": "Salz",
+  "additiveKaolin": "Kaolin (Tonerde)",
+  "additiveCitricAcid": "Zitronensäure",
+  "additiveLacticAcid": "Milchsäure",
+  "additiveVinegar": "Essig",
+  "acidStrength": "Säuregehalt",
+  "liquidLabel": "Flüssigkeit für die Lauge",
+  "liquidGoatMilk": "Ziegenmilch",
+  "liquidCowMilk": "Kuhmilch",
+  "liquidBeer": "Bier",
+  "liquidAloe": "Aloe-vera-Saft",
+  "liquidCoconutMilk": "Kokosmilch",
+  "additiveOther": "Anderer Zusatz",
+  "title": "Seifenrezept",
+  "sub": "Jemand hat dieses Seifenrezept aus Lye Calc mit dir geteilt.",
+  "open": "In Lye Calc öffnen",
+  "get": "Lye Calc holen",
+  "copy": "Rezept kopieren",
+  "copied": "Kopiert. Öffne in Lye Calc das Menü und tippe auf „Rezepttext einfügen“.",
+  "after": "Gerade installiert? Komm hierher zurück und tippe noch einmal.",
+  "bad": "In diesem Link ist kein Rezept, oder er ist abgeschnitten. Lass dir den Code oder Link noch einmal geben.",
+  "senderLye": "Lauge und Wasser, wie Lye Calc des Absenders sie berechnet hat"
+ },
+ "es": {
+  "oilsTitle": "Aceites y grasas",
+  "superfat": "Sobreengrasado",
+  "fragrance": "Fragancia",
+  "additivesTitle": "Aditivos",
+  "water": "Agua",
+  "lyeTitle": "Sosa",
+  "lyeNaohShort": "NaOH · pastilla",
+  "lyeKohShort": "KOH · líquido",
+  "lyeDualShort": "Ambas",
+  "waterModeConcentration": "Concentración de sosa",
+  "waterModeRatio": "Proporción agua : sosa",
+  "waterModePercent": "Agua en % de los aceites",
+  "weighSafety": "Gafas y guantes puestos. Sosa al líquido, nunca el líquido a la sosa, y remueve en un lugar ventilado.",
+  "pdfFooter": "Hecho con Lye Calc. Comprueba las recetas nuevas con otra calculadora antes de pesar la sosa.",
+  "untitledRecipe": "Receta nueva",
+  "additiveSodiumLactate": "Lactato de sodio",
+  "additiveSugar": "Azúcar",
+  "additiveHoney": "Miel",
+  "additiveSalt": "Sal",
+  "additiveKaolin": "Arcilla caolín",
+  "additiveCitricAcid": "Ácido cítrico",
+  "additiveLacticAcid": "Ácido láctico",
+  "additiveVinegar": "Vinagre",
+  "acidStrength": "Concentración del ácido",
+  "liquidLabel": "Líquido para la sosa",
+  "liquidGoatMilk": "Leche de cabra",
+  "liquidCowMilk": "Leche de vaca",
+  "liquidBeer": "Cerveza",
+  "liquidAloe": "Jugo de aloe vera",
+  "liquidCoconutMilk": "Leche de coco",
+  "additiveOther": "Otro aditivo",
+  "title": "Receta de jabón",
+  "sub": "Alguien ha compartido contigo esta receta de jabón desde Lye Calc.",
+  "open": "Abrir en Lye Calc",
+  "get": "Descargar Lye Calc",
+  "copy": "Copiar receta",
+  "copied": "Copiada. En Lye Calc, abre el menú y toca «Pegar texto de receta».",
+  "after": "¿Acabas de instalarla? Vuelve aquí y toca el botón otra vez.",
+  "bad": "Este enlace no tiene ninguna receta o está cortado. Pide el código o el enlace otra vez.",
+  "senderLye": "Sosa y agua, tal como las calculó el Lye Calc de quien la envía"
+ },
+ "fr": {
+  "oilsTitle": "Huiles et graisses",
+  "superfat": "Surgraissage",
+  "fragrance": "Parfum",
+  "additivesTitle": "Additifs",
+  "water": "Eau",
+  "lyeTitle": "Soude",
+  "lyeNaohShort": "NaOH · solide",
+  "lyeKohShort": "KOH · liquide",
+  "lyeDualShort": "Les deux",
+  "waterModeConcentration": "Concentration de la solution",
+  "waterModeRatio": "Rapport eau : soude",
+  "waterModePercent": "Eau en % des huiles",
+  "weighSafety": "Lunettes et gants. La soude dans le liquide, jamais le liquide sur la soude, et mélangez dans un endroit aéré.",
+  "pdfFooter": "Fait avec Lye Calc. Vérifiez toute nouvelle recette avec un second calculateur avant de peser la soude.",
+  "untitledRecipe": "Nouvelle recette",
+  "additiveSodiumLactate": "Lactate de sodium",
+  "additiveSugar": "Sucre",
+  "additiveHoney": "Miel",
+  "additiveSalt": "Sel",
+  "additiveKaolin": "Argile kaolin",
+  "additiveCitricAcid": "Acide citrique",
+  "additiveLacticAcid": "Acide lactique",
+  "additiveVinegar": "Vinaigre",
+  "acidStrength": "Concentration de l’acide",
+  "liquidLabel": "Liquide pour la soude",
+  "liquidGoatMilk": "Lait de chèvre",
+  "liquidCowMilk": "Lait de vache",
+  "liquidBeer": "Bière",
+  "liquidAloe": "Jus d’aloe vera",
+  "liquidCoconutMilk": "Lait de coco",
+  "additiveOther": "Autre additif",
+  "title": "Recette de savon",
+  "sub": "Quelqu’un vous a partagé cette recette de savon depuis Lye Calc.",
+  "open": "Ouvrir dans Lye Calc",
+  "get": "Obtenir Lye Calc",
+  "copy": "Copier la recette",
+  "copied": "Copiée. Dans Lye Calc, ouvrez le menu et touchez « Coller une recette ».",
+  "after": "Vous venez de l’installer ? Revenez ici et touchez à nouveau le bouton.",
+  "bad": "Ce lien ne contient pas de recette, ou il est coupé. Redemandez le code ou le lien.",
+  "senderLye": "Soude et eau, telles que les a calculées le Lye Calc de l’expéditeur"
+ },
+ "pt": {
+  "oilsTitle": "Óleos e gorduras",
+  "superfat": "Superengorduramento",
+  "fragrance": "Fragrância",
+  "additivesTitle": "Aditivos",
+  "water": "Água",
+  "lyeTitle": "Soda",
+  "lyeNaohShort": "NaOH · barra",
+  "lyeKohShort": "KOH · líquido",
+  "lyeDualShort": "Ambas",
+  "waterModeConcentration": "Concentração da soda",
+  "waterModeRatio": "Proporção água : soda",
+  "waterModePercent": "Água em % dos óleos",
+  "weighSafety": "Óculos e luvas. Soda no líquido, nunca o líquido na soda, e misture em local ventilado.",
+  "pdfFooter": "Feito com Lye Calc. Confira receitas novas em outra calculadora antes de pesar a soda.",
+  "untitledRecipe": "Nova receita",
+  "additiveSodiumLactate": "Lactato de sódio",
+  "additiveSugar": "Açúcar",
+  "additiveHoney": "Mel",
+  "additiveSalt": "Sal",
+  "additiveKaolin": "Argila caulim",
+  "additiveCitricAcid": "Ácido cítrico",
+  "additiveLacticAcid": "Ácido lático",
+  "additiveVinegar": "Vinagre",
+  "acidStrength": "Concentração do ácido",
+  "liquidLabel": "Líquido para a soda",
+  "liquidGoatMilk": "Leite de cabra",
+  "liquidCowMilk": "Leite de vaca",
+  "liquidBeer": "Cerveja",
+  "liquidAloe": "Suco de aloe vera",
+  "liquidCoconutMilk": "Leite de coco",
+  "additiveOther": "Outro aditivo",
+  "title": "Receita de sabão",
+  "sub": "Alguém compartilhou com você esta receita de sabão do Lye Calc.",
+  "open": "Abrir no Lye Calc",
+  "get": "Baixar o Lye Calc",
+  "copy": "Copiar receita",
+  "copied": "Copiada. No Lye Calc, abra o menu e toque em “Colar texto da receita”.",
+  "after": "Acabou de instalar? Volte aqui e toque no botão de novo.",
+  "bad": "Este link não tem receita ou está cortado. Peça o código ou o link de novo.",
+  "senderLye": "Soda e água, como o Lye Calc de quem enviou calculou"
+ },
+ "it": {
+  "oilsTitle": "Oli e grassi",
+  "superfat": "Surgrassaggio",
+  "fragrance": "Profumo",
+  "additivesTitle": "Additivi",
+  "water": "Acqua",
+  "lyeTitle": "Soda",
+  "lyeNaohShort": "NaOH · solido",
+  "lyeKohShort": "KOH · liquido",
+  "lyeDualShort": "Entrambe",
+  "waterModeConcentration": "Concentrazione della soda",
+  "waterModeRatio": "Rapporto acqua : soda",
+  "waterModePercent": "Acqua come % degli oli",
+  "weighSafety": "Occhiali e guanti. Aggiungi la soda al liquido, mai il liquido alla soda, e mescola in un luogo ventilato.",
+  "pdfFooter": "Creato con Lye Calc. Controlla le nuove ricette con un secondo calcolatore di soda prima di pesare la soda.",
+  "untitledRecipe": "Nuova ricetta",
+  "additiveSodiumLactate": "Lattato di sodio",
+  "additiveSugar": "Zucchero",
+  "additiveHoney": "Miele",
+  "additiveSalt": "Sale",
+  "additiveKaolin": "Argilla caolino",
+  "additiveCitricAcid": "Acido citrico",
+  "additiveLacticAcid": "Acido lattico",
+  "additiveVinegar": "Aceto",
+  "acidStrength": "Concentrazione dell’acido",
+  "liquidLabel": "Liquido per la soda",
+  "liquidGoatMilk": "Latte di capra",
+  "liquidCowMilk": "Latte vaccino",
+  "liquidBeer": "Birra",
+  "liquidAloe": "Succo di aloe vera",
+  "liquidCoconutMilk": "Latte di cocco",
+  "additiveOther": "Altro additivo",
+  "title": "Ricetta di sapone",
+  "sub": "Qualcuno ha condiviso con te questa ricetta di sapone da Lye Calc.",
+  "open": "Apri in Lye Calc",
+  "get": "Scarica Lye Calc",
+  "copy": "Copia ricetta",
+  "copied": "Copiata. In Lye Calc apri il menu e tocca «Incolla testo ricetta».",
+  "after": "L’hai appena installata? Torna qui e tocca di nuovo il pulsante.",
+  "bad": "Questo link non contiene una ricetta, oppure è tagliato. Chiedi di nuovo il codice o il link.",
+  "senderLye": "Soda e acqua, come le ha calcolate il Lye Calc di chi l’ha inviata"
+ }
+};
+  var OILS = {"olive":"Olive oil","olive_pomace":"Olive oil, pomace","coconut76":"Coconut oil, 76°","coconut92":"Coconut oil, 92°","coconut_fractionated":"Coconut oil, fractionated","palm":"Palm oil","palm_kernel":"Palm kernel oil","castor":"Castor oil","shea":"Shea butter","shea_oil":"Shea oil, fractionated","cocoa":"Cocoa butter","mango_butter":"Mango butter","lard":"Lard","tallow_beef":"Beef tallow","tallow_sheep":"Sheep tallow","almond":"Sweet almond oil","avocado":"Avocado oil","avocado_butter":"Avocado butter","sunflower":"Sunflower oil","sunflower_ho":"Sunflower oil, high oleic","rice_bran":"Rice bran oil","canola":"Canola oil","canola_ho":"Canola oil, high oleic","rapeseed":"Rapeseed oil, unrefined","babassu":"Babassu oil","apricot":"Apricot kernel oil","argan":"Argan oil","baobab":"Baobab oil","beeswax":"Beeswax","black_cumin":"Black cumin seed oil","borage":"Borage oil","brazil_nut":"Brazil nut oil","camelina":"Camelina seed oil","camellia":"Camellia seed oil","candelilla":"Candelilla wax","chicken_fat":"Chicken fat","corn":"Corn oil","cottonseed":"Cottonseed oil","cupuacu":"Cupuaçu butter","duck_fat":"Duck fat","emu":"Emu oil","evening_primrose":"Evening primrose oil","ghee":"Ghee","goose_fat":"Goose fat","grapeseed":"Grapeseed oil","hazelnut":"Hazelnut oil","hemp":"Hemp seed oil","illipe":"Illipe butter","jojoba":"Jojoba oil","kokum":"Kokum butter","kukui":"Kukui nut oil","lanolin":"Lanolin","macadamia":"Macadamia nut oil","marula":"Marula oil","meadowfoam":"Meadowfoam seed oil","moringa":"Moringa oil","murumuru":"Murumuru butter","neem":"Neem oil","oat":"Oat oil","passion_fruit":"Passion fruit seed oil","peach_kernel":"Peach kernel oil","peanut":"Peanut oil","pistachio":"Pistachio oil","pomegranate":"Pomegranate seed oil","poppy":"Poppy seed oil","pumpkin":"Pumpkin seed oil","raspberry":"Raspberry seed oil","rosehip":"Rosehip oil","safflower":"Safflower oil","safflower_ho":"Safflower oil, high oleic","sea_buckthorn":"Sea buckthorn seed oil","sesame":"Sesame oil","soybean":"Soybean oil","soy_wax":"Soy wax (fully hydrogenated)","stearic_acid":"Stearic acid","tamanu":"Tamanu oil","walnut":"Walnut oil","wheat_germ":"Wheat germ oil"};
+  var ADDITIVES = { sl: 'additiveSodiumLactate', su: 'additiveSugar', h: 'additiveHoney', sa: 'additiveSalt', ka: 'additiveKaolin', ca: 'additiveCitricAcid', la: 'additiveLacticAcid', vi: 'additiveVinegar', x: 'additiveOther' };
+  var ADDITIVES_EN = { sl: 'Sodium lactate', su: 'Sugar', h: 'Honey', sa: 'Salt', ka: 'Kaolin clay', ca: 'Citric acid', la: 'Lactic acid', vi: 'Vinegar', x: 'Other additive' };
+  var LIQUIDS = { gm: 'liquidGoatMilk', cm: 'liquidCowMilk', b: 'liquidBeer', a: 'liquidAloe', co: 'liquidCoconutMilk' };
+  var LIQUIDS_EN = { gm: 'goat milk', cm: 'cow\u2019s milk', b: 'beer', a: 'aloe vera juice', co: 'coconut milk' };
+  var ACIDS = { ca: 1, la: 1, vi: 1 };
+
+  var lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  var t = T[lang] || T.en;
+  document.documentElement.lang = T[lang] ? lang : 'en';
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function num(v) { return Number(v).toLocaleString(document.documentElement.lang, { maximumFractionDigits: 2 }); }
+  function numEn(v) { return String(Math.round(Number(v) * 100) / 100); }
+  function isNum(v) { return typeof v === 'number' && isFinite(v) && v >= 0; }
+
+  $('kicker').textContent = t.title;
+  // Another recipe link opened in the same tab only changes the part after "#": show that recipe.
+  window.addEventListener('hashchange', function () { location.reload(); });
+
+  var data = (/^#([A-Za-z0-9_-]+)$/.exec(location.hash) || [])[1];
+  var r = null;
+  if (data && data.length <= 6000) {
+    try {
+      var b64 = data.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      r = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    } catch (e) { r = null; }
+  }
+  var ok = r && r.v === 1 && Array.isArray(r.o) && r.o.length > 0 && r.o.every(function (o) {
+    return Array.isArray(o) && o.length === 2 && isNum(o[1]) &&
+      (typeof o[0] === 'string' || (typeof o[0] === 'number' && Array.isArray(r.c) && Array.isArray(r.c[o[0]])));
+  });
+  if (!ok) {
+    $('name').textContent = t.bad;
+    return;
+  }
+
+  var name = typeof r.n === 'string' && r.n ? r.n : t.untitledRecipe;
+  document.title = name + ' · Lye Calc';
+  $('name').textContent = name;
+  $('sub').textContent = t.sub;
+
+  var byPercent = isNum(r.p);
+  function oilName(id) {
+    if (typeof id === 'number') return String(r.c[id][0] || '');
+    return OILS[id] || id;
+  }
+  function amount(v) { return byPercent ? num(v) + ' %' : num(v) + ' g'; }
+  var card = $('card');
+  function section(title, rows) {
+    if (!rows.length) return;
+    card.appendChild(el('h2', null, title));
+    rows.forEach(function (row) {
+      var d = el('div', 'row');
+      d.appendChild(el('span', null, row[0]));
+      d.appendChild(el('b', null, row[1]));
+      card.appendChild(d);
+    });
+  }
+
+  var lye = { n: t.lyeNaohShort, k: t.lyeKohShort, d: t.lyeDualShort }[r.y] || '';
+  if (r.y === 'd' && isNum(r.k)) lye += ' (KOH ' + num(r.k) + ' %)';
+  // q [liquid code, own name, own INCI]: milk, beer... in the place of water; the amounts are the same as for water.
+  var q = Array.isArray(r.q) && typeof r.q[0] === 'string' ? r.q : null;
+  var liquid = q && (LIQUIDS[q[0]] || (q[0] === 'x' && q[1])) ? (q[0] === 'x' ? String(q[1]) : t[LIQUIDS[q[0]]]) : null;
+  var liquidEn = q && (LIQUIDS_EN[q[0]] || (q[0] === 'x' && q[1])) ? (q[0] === 'x' ? String(q[1]) : LIQUIDS_EN[q[0]]) : null;
+  var w = Array.isArray(r.w) ? r.w : [];
+  var water = w[0] === 'c' ? [t.waterModeConcentration, num(w[1]) + ' %']
+    : w[0] === 'r' ? [t.waterModeRatio, num(w[1]) + ' : 1']
+    : w[0] === 'p' ? [t.waterModePercent, num(w[1]) + ' %'] : null;
+  var settings = [[t.lyeTitle, lye]];
+  if (isNum(r.s)) settings.push([t.superfat, num(r.s) + ' %']);
+  if (liquid) settings.push([t.liquidLabel, liquid]);
+  if (water) settings.push(water);
+  if (isNum(r.f) && r.f > 0) settings.push([t.fragrance, num(r.f) + ' %']);
+  section(t.lyeTitle, settings);
+
+  var oils = r.o.map(function (o) { return [oilName(o[0]), amount(o[1])]; });
+  if (byPercent) oils.push(['= ' + num(r.p) + ' g', '100 %']);
+  section(t.oilsTitle, oils);
+
+  var additives = (Array.isArray(r.a) ? r.a : []).filter(function (a) { return Array.isArray(a) && isNum(a[1]); });
+  function additiveName(a, en) { return a[0] === 'x' && a[2] ? String(a[2]) : (en ? ADDITIVES_EN[a[0]] : t[ADDITIVES[a[0]]]) || ''; }
+  function acidStrength(a, en) { return ACIDS[a[0]] && isNum(a[2]) && a[2] > 0 && a[2] <= 100 ? (en ? ' (' + numEn(a[2]) + '% acid)' : ' · ' + t.acidStrength + ' ' + num(a[2]) + ' %') : ''; }
+  section(t.additivesTitle, additives.map(function (a) { return [additiveName(a, false), num(a[1]) + ' %' + acidStrength(a, false)]; }));
+
+  var made = Array.isArray(r.r) && r.r.length === 4 && r.r.every(isNum) ? r.r : null;
+  if (made) {
+    var rows = [];
+    if (made[0] > 0) rows.push(['NaOH', num(made[0]) + ' g']);
+    if (made[1] > 0) rows.push(['KOH', num(made[1]) + ' g']);
+    rows.push([liquid || t.water, num(made[2]) + ' g']);
+    if (made[3] > 0) rows.push([t.fragrance, num(made[3]) + ' g']);
+    section(t.senderLye, rows);
+  }
+
+  $('safety').textContent = t.weighSafety;
+  $('footer').textContent = t.pdfFooter;
+  $('recipe').className = '';
+
+  // Text the app's "Paste recipe" reads (English words, one ingredient per line), with the link that carries the
+  // exact recipe at the end: pasted into Lye Calc, the link wins.
+  var link = 'https://andronaft-2.github.io/app_politics_and_terms/lye-calc/r.html#' + data;
+  var text = [name];
+  if (isNum(r.s)) text.push('Superfat ' + numEn(r.s) + '%');
+  if (isNum(r.f) && r.f > 0) text.push('Fragrance ' + numEn(r.f) + '%');
+  text.push('');
+  r.o.forEach(function (o) { text.push('• ' + oilName(o[0]) + ' ' + numEn(o[1]) + (byPercent ? '%' : ' g')); });
+  if (byPercent) text.push('Oils total ' + numEn(r.p) + ' g');
+  additives.forEach(function (a) { text.push('• ' + additiveName(a, true) + ' ' + numEn(a[1]) + '% of oils' + acidStrength(a, true)); });
+  if (made) {
+    text.push('');
+    text.push('Lye and ' + (liquidEn || 'water') + ' (sender’s Lye Calc): ' + [
+      made[0] > 0 ? 'NaOH ' + numEn(made[0]) + ' g' : null,
+      made[1] > 0 ? 'KOH ' + numEn(made[1]) + ' g' : null,
+      (liquidEn || 'water') + ' ' + numEn(made[2]) + ' g'
+    ].filter(Boolean).join(', '));
+  }
+  text.push('');
+  text.push('Lye Calc: ' + link);
+  text = text.join('\n');
+
+  $('copy').textContent = t.copy;
+  $('copy').addEventListener('click', function () {
+    function done() { $('copied').textContent = t.copied; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var area = el('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      try { if (document.execCommand('copy')) done(); } catch (e) {}
+      document.body.removeChild(area);
+    }
+  });
+
+  $('open').textContent = t.open;
+  $('play').textContent = t.get + ' · Google Play';
+  $('appstore').textContent = t.get + ' · App Store';
+  $('after').textContent = t.after;
+  var ua = navigator.userAgent;
+  var android = /Android/i.test(ua);
+  var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (android) {
+    // Opens the app, or Google Play when it is not installed.
+    $('open').href = 'intent://recipe/' + data + '#Intent;scheme=lyecalc;package=com.andrii.soapcalc;S.browser_fallback_url=' +
+      encodeURIComponent(PLAY) + ';end';
+  } else if (ios) {
+    $('open').href = 'lyecalc://recipe/' + data;
+    $('play').className = 'hidden';
+    if (APP_STORE_ID) {
+      $('appstore').href = 'https://apps.apple.com/app/id' + APP_STORE_ID;
+      $('appstore').className = 'btn secondary';
+    }
+  } else {
+    // On a computer there is no app to open: copying the text, or the store page, is the way.
+    $('open').className = 'hidden';
+    $('after').className = 'hidden';
+  }
+})();
+</script>
+</body>
+</html>

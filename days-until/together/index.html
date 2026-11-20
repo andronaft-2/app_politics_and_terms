@@ -141,7 +141,10 @@
   // A gift: the notes under the pages ride along as "n". The page never reads them: they are for the app, and
   // for the person to find one a day.
   var n = /[#&]n=([A-Za-z0-9_-]+)/.exec(location.hash);
-  var data = m[1] + (n ? '&n=' + n[1] : '');
+  // Pokes: "r" is the code of the room on the poke server where friends with this countdown poke each other.
+  // The page passes it to the app unread; an app without pokes ignores it.
+  var r = /[#&]r=([A-Za-z0-9_-]{22})(?![A-Za-z0-9_-])/.exec(location.hash);
+  var data = m[1] + (n ? '&n=' + n[1] : '') + (r ? '&r=' + r[1] : '');
   if (n) {
     var G = { en: ['A countdown for you', 'There are notes under its pages. Tear one off each day to read them.'],
       uk: ['Відлік для тебе', 'Під його листками є записки. Відривай по листку на день, щоб їх прочитати.'],
