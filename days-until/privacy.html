@@ -10,12 +10,12 @@
 <body>
 <main>
   <header><div class="logo"></div><h1>Days Until privacy policy</h1></header>
-  <p class="muted">Effective date: 11 November 2026</p>
+  <p class="muted">Effective date: 20 November 2026</p>
   <nav class="lang"><a href="#en">English</a><a href="#uk">Українська</a></nav>
 
   <section class="doc" id="en">
     <h2>Summary</h2>
-    <p>Days Until is published by Dre Dev ("we"). It counts the days to and from your events and shows them on home and lock screen widgets. Everything you enter stays on your device. We don't run accounts, ads or analytics, and we don't sell or share your data.</p>
+    <p>Days Until is published by Dre Dev ("we"). It counts the days to and from your events and shows them on home and lock screen widgets. Everything you enter stays on your device. The one exception is pokes in a shared countdown, which you turn on yourself: they go through our server, which never learns what you are counting down to (see "Pokes" below). We don't run accounts, ads or analytics, and we don't sell or share your data.</p>
 
     <h2>Data stored on your device</h2>
     <p>The app saves the following only in the app's storage on your phone:</p>
@@ -35,6 +35,18 @@
     <h2>Count down together</h2>
     <p>If you tap "Count down together", the app puts one event into a link and opens your phone's share menu. The link holds the event's name, emoji, date and time, repeat, caption and theme; it never holds photos, notes or reminders. The event sits after the "#" in the link, which a browser never sends to a website, so it is not sent to us or stored anywhere. Whoever opens the link sees the event on a page on this site (hosted by GitHub Pages), and the page opens Days Until with the same data. Nothing is added until the friend taps "Add". "Add from a friend's link" in Settings reads the clipboard only after you tap its button.</p>
 
+    <h2>Pokes in a shared countdown</h2>
+    <p>People who count down to the same event through one "Count down together" link can poke each other: a friend's poke arrives as a notification, and the number of pokes shows on the event. Pokes work only through our server, so this is the one feature where something leaves your device. It starts only when you share a countdown with "Count down together" or add one from such a link, and you can turn it off in Settings ("Pokes from friends").</p>
+    <p>Our server (run on Cloudflare) keeps only:</p>
+    <ul>
+      <li>a random code for the shared countdown, which is also in the link;</li>
+      <li>the event's day, so the server knows when to delete everything (nothing for repeating events and count-ups, which are deleted 400 days after the last poke);</li>
+      <li>a random member number for your phone in that countdown and a one-way fingerprint (SHA-256) of a secret key. The key itself stays in your phone's secure storage and is not included in backups;</li>
+      <li>your phone's push token from Google Firebase Cloud Messaging and, on iPhone, the widget push token from Apple, so a poke can reach you and redraw the widget;</li>
+      <li>the number of pokes and the times of your last three pokes, to limit pokes to three a day.</li>
+    </ul>
+    <p>The server never receives the event's name, emoji, photo, notes, your name, email or contacts. It does not store IP addresses; Cloudflare, Google and Apple, which carry the requests and notifications, see them as part of delivering them (see the <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>, <a href="https://policies.google.com/privacy">Google</a> and <a href="https://www.apple.com/legal/privacy/">Apple</a> privacy policies). On Android the notification text with the event's name is written by your phone, not by the server.</p>
+    <p>What is deleted and when: "Leave shared countdown" on the event, deleting the event or turning pokes off deletes your row from the server at once (or the next time the app is online). When the last person leaves, the whole shared countdown is deleted. Every shared countdown is also deleted two days after its event's day.</p>
     <h2>Backups</h2>
     <p>If you tap "Back up events" in Settings, the app creates a file on your device with your events, notes and background photos and opens your phone's share menu, so you can save it where you choose (for example Files, Google Drive or email). The file is not sent to us. If you tap "Restore from a backup", the app reads only the file you pick and adds its events to the ones already on your device.</p>
 
@@ -43,14 +55,14 @@
       <li>Notifications: for reminders before your events and milestone celebrations. You can turn them off at any time in system settings.</li>
       <li>Photos: only the photo you pick for an event background is read.</li>
       <li>Files: only the backup file you pick is read.</li>
-      <li>Internet: only to verify subscriptions.</li>
+      <li>Internet: to verify subscriptions and, if you use them, for pokes.</li>
     </ul>
 
     <h2>Children</h2>
     <p>Days Until is not directed at children under 13, and we don't knowingly collect information from children.</p>
 
     <h2>Your rights</h2>
-    <p>Because your data stays on your device, you can view, change or delete it in the app or by uninstalling the app. For questions about subscription data held by RevenueCat, contact us and we will help.</p>
+    <p>Because your data stays on your device, you can view, change or delete it in the app or by uninstalling the app. For pokes, "Leave shared countdown" or turning pokes off in Settings deletes your row from our server. For questions about subscription data held by RevenueCat, contact us and we will help.</p>
 
     <h2>Changes</h2>
     <p>If this policy changes, we will update this page and the effective date above.</p>
@@ -62,7 +74,7 @@
 
   <section class="doc" id="uk">
     <h2>Коротко</h2>
-    <p>Days Until публікує Dre Dev («ми»). Застосунок рахує дні до ваших подій і від них та показує їх у віджетах на головному екрані й екрані блокування. Усе, що ви вводите, залишається на вашому пристрої. У нас немає облікових записів, реклами й аналітики, і ми не продаємо та не передаємо ваші дані.</p>
+    <p>Days Until публікує Dre Dev («ми»). Застосунок рахує дні до ваших подій і від них та показує їх у віджетах на головному екрані й екрані блокування. Усе, що ви вводите, залишається на вашому пристрої. Єдиний виняток — стуки в спільному відліку, які ви вмикаєте самі: вони йдуть через наш сервер, і він ніколи не дізнається, чого ви чекаєте (див. «Стуки» нижче). У нас немає облікових записів, реклами й аналітики, і ми не продаємо та не передаємо ваші дані.</p>
 
     <h2>Дані на вашому пристрої</h2>
     <p>Застосунок зберігає лише в пам'яті застосунку на вашому телефоні:</p>
@@ -82,6 +94,18 @@
     <h2>Чекаємо разом</h2>
     <p>Якщо натиснути «Чекаємо разом», застосунок кладе одну подію в посилання й відкриває системне меню «Поділитися». У посиланні є назва події, емодзі, дата й час, повтор, підпис і тема; фото, нотаток і нагадувань у ньому немає. Подія стоїть після «#» у посиланні, а цю частину браузер ніколи не надсилає сайту, тож вона не потрапляє до нас і ніде не зберігається. Той, хто відкриє посилання, побачить подію на сторінці цього сайту (його розміщує GitHub Pages), і сторінка відкриє Days Until з тими самими даними. Нічого не додається, доки друг не натисне «Додати». «Додати з посилання друга» в налаштуваннях читає буфер обміну лише після натискання кнопки.</p>
 
+    <h2>Стуки в спільному відліку</h2>
+    <p>Люди, які чекають ту саму подію через одне посилання «Чекаємо разом», можуть стукати одне одному: стук друга приходить сповіщенням, а кількість стуків видно на події. Стуки працюють лише через наш сервер, тож це єдина функція, коли щось залишає ваш пристрій. Вона починає працювати, лише коли ви ділитеся відліком через «Чекаємо разом» або додаєте відлік із такого посилання, і її можна вимкнути в налаштуваннях («Стуки від друзів»).</p>
+    <p>Наш сервер (працює на Cloudflare) зберігає лише:</p>
+    <ul>
+      <li>випадковий код спільного відліку, той самий, що в посиланні;</li>
+      <li>день події, щоб сервер знав, коли все видалити (для повторюваних подій і відліків «скільки минуло» дня немає: їх видаляємо через 400 днів після останнього стуку);</li>
+      <li>випадковий номер вашого телефона в цьому відліку та односторонній відбиток (SHA-256) секретного ключа. Сам ключ лишається в захищеному сховищі телефона й не потрапляє в резервні копії;</li>
+      <li>токен для сповіщень Google Firebase Cloud Messaging і, на iPhone, токен Apple для оновлення віджета, щоб стук міг до вас дійти й оновити віджет;</li>
+      <li>кількість стуків і час трьох ваших останніх стуків, щоб обмежити стуки трьома на добу.</li>
+    </ul>
+    <p>Сервер ніколи не отримує назву події, емодзі, фото, нотатки, ваше ім'я, пошту чи контакти. Він не зберігає IP-адрес; Cloudflare, Google і Apple, які доставляють запити й сповіщення, бачать їх у процесі доставки (див. політики конфіденційності <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>, <a href="https://policies.google.com/privacy">Google</a> і <a href="https://www.apple.com/legal/privacy/">Apple</a>). На Android текст сповіщення з назвою події складає ваш телефон, а не сервер.</p>
+    <p>Що й коли видаляється: «Вийти зі спільного відліку» на події, видалення події або вимкнення стуків одразу видаляє ваш рядок із сервера (або коли застосунок наступного разу буде онлайн). Коли виходить остання людина, видаляється весь спільний відлік. Кожен спільний відлік також видаляється через два дні після дня події.</p>
     <h2>Резервні копії</h2>
     <p>Якщо в налаштуваннях натиснути «Зберегти резервну копію», застосунок створить на пристрої файл із вашими подіями, нотатками й фото для фону та відкриє системне меню «Поділитися», щоб ви зберегли його там, де забажаєте (наприклад, у Файлах, на Google Диску чи в пошті). Нам цей файл не надсилається. Якщо натиснути «Відновити з резервної копії», застосунок прочитає лише вибраний вами файл і додасть його події до тих, що вже є на пристрої.</p>
 
@@ -90,14 +114,14 @@
       <li>Сповіщення: нагадування перед подіями та святкування ювілеїв. Їх можна вимкнути будь-коли в налаштуваннях системи.</li>
       <li>Фото: застосунок читає лише те фото, яке ви обрали для фону події.</li>
       <li>Файли: застосунок читає лише файл резервної копії, який ви обрали.</li>
-      <li>Інтернет: лише для перевірки підписки.</li>
+      <li>Інтернет: для перевірки підписки і, якщо ви ними користуєтеся, для стуків.</li>
     </ul>
 
     <h2>Діти</h2>
     <p>Days Until не призначений для дітей до 13 років, і ми свідомо не збираємо інформацію про дітей.</p>
 
     <h2>Ваші права</h2>
-    <p>Оскільки дані залишаються на пристрої, ви можете переглянути, змінити або видалити їх у застосунку чи видаливши застосунок. Із питаннями щодо даних підписки в RevenueCat звертайтеся до нас, і ми допоможемо.</p>
+    <p>Оскільки дані залишаються на пристрої, ви можете переглянути, змінити або видалити їх у застосунку чи видаливши застосунок. Для стуків «Вийти зі спільного відліку» або вимкнення стуків у налаштуваннях видаляє ваш рядок із нашого сервера. Із питаннями щодо даних підписки в RevenueCat звертайтеся до нас, і ми допоможемо.</p>
 
     <h2>Зміни</h2>
     <p>Якщо політика зміниться, ми оновимо цю сторінку та дату набрання чинності вгорі.</p>
