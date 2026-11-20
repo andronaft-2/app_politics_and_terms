@@ -31,10 +31,10 @@
     <p>The app uses the camera or your photo library only when you tap "Add photo" on a recipe or a diary entry, or when you use "Photo of your fridge" (next section). Only the photo you take or pick is copied into the app's storage. The app does not scan your photo library.</p>
 
     <h2>Photo of your fridge (internet, optional)</h2>
-    <p>If you use "Photo of your fridge", the app first shows where the photo goes and asks you to agree. Then it sends the one photo you take or pick, made smaller and with its metadata removed (place, time, phone model), together with the list of ingredient names the recipes use, to our server, which runs on Cloudflare. The server passes the photo to Claude, an AI service of Anthropic, PBC, which answers which of those ingredients are in the photo. The app shows you the list, and only what you keep is ticked as "I have".</p>
+    <p>If you use "Photo of your fridge", the app first shows where the photo goes and asks you to agree. Then it sends the one photo you take or pick, made smaller and with its metadata removed (place, time, phone model), together with the list of ingredient names the recipes use, to our server, which runs on Cloudflare. The server passes the photo to Gemini, an AI service of Google LLC (the Gemini API), which answers which of those ingredients are in the photo. The app shows you the list, and only what you keep is ticked as "I have".</p>
     <ul>
       <li>Our server does not store or log the photo, the answer or your IP address. Cloudflare uses the IP address for a short time to limit the number of requests.</li>
-      <li>Anthropic processes the photo for us as a service provider. It normally deletes what it receives within 30 days, may keep it longer where its usage policy or the law requires, and does not use it to train its models. See <a href="https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data">Anthropic's data retention</a> and the <a href="https://www.anthropic.com/legal/privacy">Anthropic privacy policy</a>.</li>
+      <li>Google processes the photo for us as a service provider. It keeps what it receives for 55 days, only to detect and prevent misuse of its service and where the law requires; content its systems flag may be looked at by authorised Google staff. Google does not use the photo to improve its products or to train its general AI models. See the <a href="https://aistudio.google.com/docs/terms">Gemini API terms</a> ("Paid Services"), <a href="https://aistudio.google.com/docs/usage-policies">how Google monitors for abuse</a> and the <a href="https://policies.google.com/privacy">Google privacy policy</a>.</li>
       <li>The fridge photo is not saved in the app. The app counts on your device how many such photos you took today (at most 10 a day).</li>
       <li>Nothing is sent unless you take such a photo. Ticking ingredients by hand and searching for them work without the internet.</li>
       <li>Please keep people, documents and screens out of the photo.</li>
@@ -72,7 +72,7 @@
     <p>Cooked Twice is not directed at children under 13, and we don't knowingly collect information from children.</p>
 
     <h2>Your rights</h2>
-    <p>Because your data stays on your device, you can view, change or delete it in the app or by uninstalling the app. We do not keep fridge photos, so we have none to show or delete. For questions about subscription data held by RevenueCat or about a photo processed by Anthropic, contact us and we will help.</p>
+    <p>Because your data stays on your device, you can view, change or delete it in the app or by uninstalling the app. We do not keep fridge photos, so we have none to show or delete. For questions about subscription data held by RevenueCat or about a photo processed by Google, contact us and we will help.</p>
 
     <h2>Changes</h2>
     <p>If this policy changes, we will update this page and the effective date above.</p>
@@ -99,10 +99,10 @@
     <p>Застосунок користується камерою або галереєю лише тоді, коли ви натискаєте «Додати фото» на рецепті чи записі щоденника або користуєтеся «Фото холодильника» (наступний розділ). У пам'ять застосунку копіюється тільки те фото, яке ви зняли або вибрали. Застосунок не переглядає вашу галерею.</p>
 
     <h2>Фото холодильника (інтернет, за бажанням)</h2>
-    <p>Якщо ви користуєтеся «Фото холодильника», застосунок спершу показує, куди потрапляє фото, і просить вашої згоди. Потім він надсилає одне фото, яке ви зняли або вибрали, зменшене й без метаданих (місце, час, модель телефона), разом зі списком назв продуктів із рецептів на наш сервер, що працює в Cloudflare. Сервер передає фото в Claude, сервіс штучного інтелекту компанії Anthropic, PBC, який відповідає, які з цих продуктів є на фото. Застосунок показує вам список, і позначкою «У мене є» стає лише те, що ви залишили.</p>
+    <p>Якщо ви користуєтеся «Фото холодильника», застосунок спершу показує, куди потрапляє фото, і просить вашої згоди. Потім він надсилає одне фото, яке ви зняли або вибрали, зменшене й без метаданих (місце, час, модель телефона), разом зі списком назв продуктів із рецептів на наш сервер, що працює в Cloudflare. Сервер передає фото в Gemini, сервіс штучного інтелекту компанії Google LLC (Gemini API), який відповідає, які з цих продуктів є на фото. Застосунок показує вам список, і позначкою «У мене є» стає лише те, що ви залишили.</p>
     <ul>
       <li>Наш сервер не зберігає й не записує в журнали ні фото, ні відповідь, ні вашу IP-адресу. Cloudflare короткий час використовує IP-адресу, щоб обмежити кількість запитів.</li>
-      <li>Anthropic обробляє фото для нас як постачальник послуг. Зазвичай він видаляє отримане протягом 30 днів, може зберігати довше, якщо цього вимагають його правила використання або закон, і не навчає на ньому свої моделі. Див. <a href="https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data">строки зберігання даних Anthropic</a> і <a href="https://www.anthropic.com/legal/privacy">політику конфіденційності Anthropic</a>.</li>
+      <li>Google обробляє фото для нас як постачальник послуг. Він зберігає отримане 55 днів лише для того, щоб виявляти зловживання своїм сервісом і запобігати їм, і якщо цього вимагає закон; те, що його системи позначили як підозріле, можуть переглянути уповноважені працівники Google. Google не використовує фото для покращення своїх продуктів і не навчає на ньому свої загальні моделі штучного інтелекту. Див. <a href="https://aistudio.google.com/docs/terms">умови Gemini API</a> («Paid Services»), <a href="https://aistudio.google.com/docs/usage-policies">як Google стежить за зловживаннями</a> і <a href="https://policies.google.com/privacy">політику конфіденційності Google</a>.</li>
       <li>Фото холодильника в застосунку не зберігається. Застосунок рахує на пристрої, скільки таких фото ви зробили сьогодні (щонайбільше 10 на день).</li>
       <li>Нічого не надсилається, доки ви не зробите таке фото. Позначати продукти вручну й шукати їх можна без інтернету.</li>
       <li>Будь ласка, не знімайте людей, документи й екрани.</li>
@@ -140,7 +140,7 @@
     <p>Cooked Twice не призначений для дітей до 13 років, і ми свідомо не збираємо інформацію про дітей.</p>
 
     <h2>Ваші права</h2>
-    <p>Оскільки дані залишаються на пристрої, ви можете переглянути, змінити або видалити їх у застосунку чи видаливши застосунок. Фото холодильника ми не зберігаємо, тож показати чи видалити їх не можемо. Із питаннями щодо даних підписки в RevenueCat або щодо фото, яке обробив Anthropic, звертайтеся до нас, і ми допоможемо.</p>
+    <p>Оскільки дані залишаються на пристрої, ви можете переглянути, змінити або видалити їх у застосунку чи видаливши застосунок. Фото холодильника ми не зберігаємо, тож показати чи видалити їх не можемо. Із питаннями щодо даних підписки в RevenueCat або щодо фото, яке обробив Google, звертайтеся до нас, і ми допоможемо.</p>
 
     <h2>Зміни</h2>
     <p>Якщо політика зміниться, ми оновимо цю сторінку та дату набрання чинності вгорі.</p>
