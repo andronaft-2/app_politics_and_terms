@@ -1,0 +1,108 @@
+<!doctype html>
+<!--
+  "A piece of starter" page for Levain (lib/feature/starter_gift.dart in sourdough-app). The app's QR code and shared
+  link open https://andronaft-2.github.io/app_politics_and_terms/levain/starter/#<data>.
+
+  The starter (name, feeding ratio, amount kept, feeding interval, time to peak) travels after "#", which the browser
+  never sends to the site: no server sees it and nothing is stored. The page only reads it to show the card and to
+  open Levain with the same data (levain://gift?d=<data>).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>A piece of starter · Levain</title>
+<style>
+  :root { --bg: #fbf5ee; --fg: #2b1d12; --muted: #7a6656; --card: #ffffff; --line: #ead9c8; --a: #8a4b1f; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1b140f; --fg: #f6ece2; --muted: #c2ad9b; --card: #2a1f17; --line: #3e2f24; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--fg);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; }
+  main { width: 100%; max-width: 420px; padding: 40px 16px; text-align: center; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  p { color: var(--muted); margin: 0 0 22px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 22px; text-align: left; }
+  .name { font-size: 26px; font-weight: 800; margin: 4px 0 10px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--line); }
+  .row span:first-child { color: var(--muted); }
+  .btn { display: block; padding: 16px; border-radius: 18px; font-weight: 800; text-decoration: none; color: #fff;
+    background: var(--a); margin-top: 22px; }
+  .link { display: block; color: var(--fg); margin-top: 14px; }
+  .small { font-size: 13px; color: var(--muted); margin-top: 18px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="h"></h1>
+  <p id="sub"></p>
+  <div class="card" id="card">
+    <div class="name" id="name"></div>
+    <div class="row"><span id="lr"></span><span id="r"></span></div>
+    <div class="row"><span id="lk"></span><span id="k"></span></div>
+    <div class="row"><span id="lh"></span><span id="hh"></span></div>
+    <div class="row" id="prow"><span id="lp"></span><span id="p"></span></div>
+  </div>
+  <a class="btn" id="open" href="#"></a>
+  <a class="link" id="store" href="https://play.google.com/store/apps/details?id=com.andrii.sourdough"></a>
+  <div class="small" id="after"></div>
+  <div class="small" id="bad" hidden></div>
+</main>
+<script>
+(function () {
+  // [title, subtitle, open, get app, after install, bad link, ratio, keep, feed every, peaks in, h]
+  var T = {
+    en: ['A piece of starter', 'A friend gave you some of their sourdough starter. Levain can add it with its feeding schedule.', 'Add to Levain', 'Get Levain on Google Play', 'Just installed it? Come back here and tap the button again.', 'This link has no starter in it.', 'Feeding ratio', 'Keep', 'Feed every', 'Usually peaks in', 'h'],
+    uk: ['Частинка закваски', 'Друг поділився з вами своєю закваскою. Levain додасть її з розкладом годувань.', 'Додати в Levain', 'Завантажити Levain з Google Play', 'Щойно встановили? Поверніться сюди й натисніть кнопку ще раз.', 'У цьому посиланні немає закваски.', 'Пропорція годування', 'Лишати', 'Годувати кожні', 'Пік зазвичай через', 'год'],
+    de: ['Ein Stück Starter', 'Jemand hat dir etwas Sauerteigstarter geschenkt. Levain legt ihn mit seinem Fütterungsplan an.', 'Zu Levain hinzufügen', 'Levain bei Google Play holen', 'Gerade installiert? Komm hierher zurück und tippe noch einmal.', 'In diesem Link ist kein Starter.', 'Fütterungsverhältnis', 'Behalten', 'Füttern alle', 'Höhepunkt meist nach', 'h'],
+    es: ['Un trozo de masa madre', 'Alguien te ha regalado parte de su masa madre. Levain la añade con su horario de alimentación.', 'Añadir a Levain', 'Descargar Levain en Google Play', '¿Acabas de instalarla? Vuelve aquí y toca el botón otra vez.', 'Este enlace no tiene ninguna masa madre.', 'Proporción', 'Guardar', 'Alimentar cada', 'Pico normalmente en', 'h'],
+    fr: ['Un morceau de levain', 'Un ami vous a donné un peu de son levain. Levain l’ajoute avec son rythme de nourrissage.', 'Ajouter à Levain', 'Obtenir Levain sur Google Play', 'Vous venez de l’installer ? Revenez ici et touchez à nouveau le bouton.', 'Ce lien ne contient aucun levain.', 'Proportion', 'Garder', 'Nourrir toutes les', 'Pic en général après', 'h'],
+    it: ['Un pezzo di lievito madre', 'Un amico ti ha regalato un po’ del suo lievito madre. Levain lo aggiunge con i suoi rinfreschi.', 'Aggiungi a Levain', 'Scarica Levain da Google Play', 'L’hai appena installata? Torna qui e tocca di nuovo il pulsante.', 'In questo link non c’è nessun lievito.', 'Proporzione', 'Tenere', 'Rinfrescare ogni', 'Picco di solito dopo', 'h'],
+    pl: ['Kawałek zakwasu', 'Ktoś podarował ci trochę swojego zakwasu. Levain doda go z rytmem dokarmiania.', 'Dodaj do Levain', 'Pobierz Levain z Google Play', 'Właśnie zainstalowane? Wróć tu i stuknij przycisk jeszcze raz.', 'W tym linku nie ma zakwasu.', 'Proporcja', 'Zostaw', 'Dokarmiaj co', 'Szczyt zwykle po', 'h'],
+    pt: ['Um bocado de fermento', 'Um amigo deu-te um pouco do seu fermento. O Levain junta-o com o ritmo de alimentação.', 'Juntar ao Levain', 'Obter o Levain no Google Play', 'Acabaste de instalar? Volta aqui e toca no botão outra vez.', 'Esta ligação não tem nenhum fermento.', 'Proporção', 'Guardar', 'Alimentar a cada', 'Pico normalmente em', 'h'],
+    tr: ['Bir parça ekşi maya', 'Bir arkadaşın ekşi mayasından biraz verdi. Levain onu besleme düzeniyle ekler.', 'Levain\'e ekle', 'Levain\'i Google Play\'den indir', 'Yeni mi yükledin? Buraya dönüp düğmeye tekrar dokun.', 'Bu bağlantıda ekşi maya yok.', 'Besleme oranı', 'Bırak', 'Besleme aralığı', 'Genelde zirve', 'sa'],
+    ja: ['スターターのおすそ分け', '友だちがサワードウスターターを分けてくれました。Levainなら餌やりの予定ごと追加できます。', 'Levainに追加', 'Google PlayでLevainを入手', 'インストールしたら、ここに戻ってもう一度ボタンをタップしてください。', 'このリンクにはスターターがありません。', '餌の比率', '残す量', '餌やりの間隔', 'ピークまで', '時間'],
+    ko: ['스타터 한 조각', '친구가 사워도우 스타터를 나눠 줬어요. Levain이 먹이 일정과 함께 추가해요.', 'Levain에 추가', 'Google Play에서 Levain 받기', '방금 설치했나요? 여기로 돌아와 버튼을 다시 누르세요.', '이 링크에는 스타터가 없어요.', '먹이 비율', '남기는 양', '먹이 간격', '보통 피크까지', '시간'],
+    zh: ['一份酵种', '朋友分给你一些酵种。Levain 可以连同喂养计划一起添加。', '添加到 Levain', '在 Google Play 获取 Levain', '刚安装?回到这里再点一次按钮。', '这个链接里没有酵种。', '喂养比例', '保留', '喂养间隔', '通常到峰值', '小时']
+  };
+  var lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  var t = T[lang] || T.en;
+  document.documentElement.lang = T[lang] ? lang : 'en';
+  function $(id) { return document.getElementById(id); }
+  $('h').textContent = t[0]; $('sub').textContent = t[1]; $('open').textContent = t[2];
+  $('store').textContent = t[3]; $('after').textContent = t[4];
+  $('lr').textContent = t[6]; $('lk').textContent = t[7]; $('lh').textContent = t[8]; $('lp').textContent = t[9];
+
+  var data = location.hash.replace(/^#/, '');
+  var s = null;
+  if (/^[A-Za-z0-9_-]+$/.test(data)) {
+    try {
+      var b64 = data.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      s = JSON.parse(new TextDecoder().decode(bytes));
+    } catch (e) { s = null; }
+  }
+  if (!s || !s.n || !s.r || s.r.length !== 3) {
+    ['card', 'sub', 'open', 'after'].forEach(function (id) { $(id).className = 'hidden'; });
+    $('bad').hidden = false;
+    $('bad').textContent = t[5];
+    return;
+  }
+  function n(v) { return Math.round(v * 10) / 10; }
+  $('name').textContent = s.n;
+  $('r').textContent = s.r.map(n).join(':');
+  $('k').textContent = n(s.k || 50) + ' g';
+  $('hh').textContent = (s.h || 24) + ' ' + t[10];
+  if (s.p) {
+    var h = Math.floor(s.p / 60), m = s.p % 60;
+    $('p').textContent = h + ' ' + t[10] + (m ? ' ' + m + ' min' : '');
+  } else {
+    $('prow').className = 'hidden';
+  }
+  $('open').href = 'levain://gift?d=' + data;
+})();
+</script>
+</body>
+</html>
