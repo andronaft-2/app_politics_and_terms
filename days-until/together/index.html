@@ -28,7 +28,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Days Until: countdown cards with emoji">
+<meta property="og:image:alt" content="Days Until: three countdown cards with emoji and day numbers">
 <meta name="twitter:card" content="summary_large_image">
 <style>
   :root { color-scheme: dark; --bg: #09090f; --text: #f6f4ff; --muted: #a9a6c0; --a: #6a3fd8; --b: #c2357f; }
@@ -129,8 +129,9 @@
   }
   if (ev.u) {
     // A count-up ("days since") is counted together, not waited for.
-    var U = { en: 'Count together', uk: 'Рахуємо разом', de: 'Gemeinsam zählen', es: 'Contar juntos', pt: 'Contar juntos',
-      fr: 'Compter ensemble', it: 'Contiamo insieme' };
+    // The same words as the app's menu item for a count-up.
+    var U = { en: 'Count together', uk: 'Рахуємо разом', de: 'Gemeinsam Tage zählen', es: 'Contar días juntos',
+      pt: 'Contar os dias juntos', fr: 'Compter les jours ensemble', it: 'Contiamo i giorni insieme' };
     $('h').textContent = U[lang] || U.en;
   }
   var colors = THEMES[ev.h] || THEMES.ocean;
