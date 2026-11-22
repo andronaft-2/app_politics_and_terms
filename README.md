@@ -3,6 +3,12 @@
 Privacy policies and terms of use for apps by Dre Dev (mobile.support@zhukovskyi.space), served with GitHub Pages
 (Settings → Pages → Deploy from a branch → `main` / root).
 
+**Since 23.11.2026 the address of every privacy policy and terms of use is on zhukovskyi.space:**
+`https://zhukovskyi.space/apps/<app>/privacy/` and `/apps/<app>/terms/`. The texts are still written here. After a
+change is merged, copy it to the site: `cd ~/Desktop/my_space && python3 tools/sync_policies.py && ./deploy.sh -n`,
+check the dry run, then `./deploy.sh`. The pages here stay online with the same text, a `rel="canonical"` link and a
+note pointing to the new address, so old links in stores and app builds keep working. Nothing here is deleted.
+
 | App | Privacy policy | Terms of use | Support |
 | --- | --- | --- | --- |
 | Fastwise: Fasting Tracker | [fastwise/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/privacy.html) | [fastwise/terms.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/terms.html) | [fastwise/support.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/support.html) |
