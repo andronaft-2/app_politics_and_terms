@@ -14,6 +14,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Count down together · Days Until</title>
+<!--
+  Link previews. Chats read only these static tags and never see the part after "#", so every shared countdown
+  gets the same picture and words; the event itself shows once the page is open.
+-->
+<meta name="description" content="A friend shared a date with you. Open it to see the days and add it to Days Until in one tap.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Days Until">
+<meta property="og:title" content="A date shared with you · Days Until">
+<meta property="og:description" content="Open it to see the days and add it to your Days Until in one tap.">
+<meta property="og:url" content="https://andronaft-2.github.io/app_politics_and_terms/days-until/together/">
+<meta property="og:image" content="https://andronaft-2.github.io/app_politics_and_terms/days-until/together/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Days Until: countdown cards with emoji">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root { color-scheme: dark; --bg: #09090f; --text: #f6f4ff; --muted: #a9a6c0; --a: #6a3fd8; --b: #c2357f; }
   * { box-sizing: border-box; }
@@ -110,6 +126,12 @@
     $('bad').hidden = false;
     $('bad').textContent = t[5];
     return;
+  }
+  if (ev.u) {
+    // A count-up ("days since") is counted together, not waited for.
+    var U = { en: 'Count together', uk: 'Рахуємо разом', de: 'Gemeinsam zählen', es: 'Contar juntos', pt: 'Contar juntos',
+      fr: 'Compter ensemble', it: 'Contiamo insieme' };
+    $('h').textContent = U[lang] || U.en;
   }
   var colors = THEMES[ev.h] || THEMES.ocean;
   $('card').style.background = 'linear-gradient(135deg,' + colors[0] + ',' + colors[1] + ')';
