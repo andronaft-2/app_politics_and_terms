@@ -13,3 +13,6 @@ nav.lang a { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--li
 a { color: var(--accent); }
 section.doc { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 8px 24px 24px; margin-bottom: 24px; }
 ul { padding-left: 20px; }
+.moved { max-width: 760px; margin: 16px auto 0; padding: 4px 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); font-size: 15px; }
+.moved p { margin: 8px 0; }
+.moved a { color: var(--accent); word-break: break-all; }
