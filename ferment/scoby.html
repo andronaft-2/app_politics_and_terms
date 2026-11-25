@@ -1,0 +1,178 @@
+<!doctype html>
+<!--
+  SCOBY gift card page for Ferment (lib/feature/scoby_gift.dart in the ferment-app repository).
+  The card's QR opens https://andronaft-2.github.io/app_politics_and_terms/ferment/scoby.html#g=<data>.
+
+  The schedule travels after "#", the URL fragment, which the browser never sends to the site: GitHub Pages gets a
+  request for this page and nothing else, and nothing is stored. The script below reads the fragment in the browser
+  to show the schedule as plain text (it works without the app) and puts the same data in the "Open in Ferment" link.
+
+  <data> is base64url (no padding) of JSON: {"v":1,"n":batch name,"by":giver,"f1":days,"f2":days,"cb":draw every N
+  days,"fl":[[flavour, fizzy day?]],"m":message}. Only version 1 is known; a higher one asks to update the app.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>SCOBY gift · Ferment</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .logo { background: linear-gradient(135deg, #f7ba48, #c45c18); }
+  main { max-width: 520px; }
+  .card { background: var(--card); border: 2px solid #3fa88a; border-radius: 20px; padding: 16px 22px 18px; margin: 20px 0; }
+  .card h2 { margin: 4px 0 10px; }
+  .card p { margin: 0 0 6px; }
+  .btn { display: block; text-align: center; padding: 14px; border-radius: 16px; font-weight: 700; text-decoration: none;
+    color: #fff; background: linear-gradient(135deg, #3fa88a, #2a7a63); margin-top: 8px; }
+  .store { display: block; text-align: center; margin-top: 14px; }
+  .small { font-size: 14px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <header><div class="logo"></div><h1 id="h">SCOBY gift</h1></header>
+  <p class="muted" id="sub"></p>
+  <div class="card" id="card">
+    <h2 id="title"></h2>
+    <div id="lines"></div>
+  </div>
+  <p id="bad" class="hidden"></p>
+  <a class="btn" id="open" href="#"></a>
+  <a class="store" id="play" href="https://play.google.com/store/apps/details?id=com.andrii.ferment"></a>
+  <p class="muted small" id="after"></p>
+  <p class="muted small" id="ios"></p>
+  <p class="muted small" id="privacy"></p>
+</main>
+<script>
+(function () {
+  var PLAY = 'https://play.google.com/store/apps/details?id=com.andrii.ferment';
+  // Ferment has no App Store link yet; set it here once the app is published there.
+  var APP_STORE = '';
+  var VERSION = 1;
+  function plural(n, one, few, many) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+    return many;
+  }
+  var T = {
+    en: {
+      h: 'SCOBY gift', sub: 'A friend gave you a SCOBY with their kombucha schedule.',
+      title: 'A kombucha schedule', titleFrom: function (n) { return 'Kombucha schedule from ' + n; },
+      batch: function (n) { return 'Batch: ' + n; },
+      days: function (d) { return d === 1 ? '1 day' : d + ' days'; },
+      draw: function (d) { return 'Continuous brew: draw every ' + d; },
+      best: function (f) { return 'Best F2 flavours: ' + f; },
+      fizzy: function (f, d) { return f + ' (fizzy on day ' + d + ')'; },
+      open: 'Open in Ferment', play: 'Get Ferment on Google Play',
+      after: 'Just installed it? Come back here and tap “Open in Ferment” again.',
+      ios: 'Ferment is not in the App Store yet. The schedule above is all you need to follow it.',
+      privacy: 'This page reads the schedule from the link in your browser. The part of the link after “#” is not sent to this site, and nothing is stored.',
+      bad: 'This link has no schedule in it, or it was cut off. Ask your friend to share the card again.',
+      newer: 'This card was made by a newer version of Ferment. Update the app, then open the link again.'
+    },
+    uk: {
+      h: 'Подарунок SCOBY', sub: 'Друг подарував вам SCOBY разом зі своїм розкладом комбучі.',
+      title: 'Розклад комбучі', titleFrom: function (n) { return 'Розклад комбучі від ' + n; },
+      batch: function (n) { return 'Партія: ' + n; },
+      days: function (d) { return d + ' ' + plural(d, 'день', 'дні', 'днів'); },
+      draw: function (d) { return 'Безперервне бродіння: зливати кожні ' + d; },
+      best: function (f) { return 'Найкращі смаки F2: ' + f; },
+      fizzy: function (f, d) { return f + ' (газ на ' + d + '-й день)'; },
+      open: 'Відкрити у Ferment', play: 'Завантажити Ferment у Google Play',
+      after: 'Щойно встановили? Поверніться сюди й натисніть «Відкрити у Ferment» ще раз.',
+      ios: 'Ferment ще немає в App Store. Розкладу вище достатньо, щоб за ним варити.',
+      privacy: 'Ця сторінка читає розклад із посилання у вашому браузері. Частина посилання після «#» не надсилається на цей сайт, і нічого не зберігається.',
+      bad: 'У цьому посиланні немає розкладу, або воно обрізане. Попросіть друга поділитися карткою ще раз.',
+      newer: 'Цю картку зроблено в новішій версії Ferment. Оновіть застосунок і відкрийте посилання ще раз.'
+    }
+  };
+  var lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  var t = T[lang] || T.en;
+  document.documentElement.lang = T[lang] ? lang : 'en';
+  function $(id) { return document.getElementById(id); }
+  function hide(id) { $(id).className = 'hidden'; }
+  $('h').textContent = t.h;
+  document.title = t.h + ' · Ferment';
+  $('sub').textContent = t.sub;
+  $('open').textContent = t.open;
+  $('play').textContent = t.play;
+  $('after').textContent = t.after;
+  $('privacy').textContent = t.privacy;
+
+  // The same rules as the app (ScobyGift.decode): one line, at most so many characters, days 1–365.
+  function text(o, max) {
+    if (typeof o !== 'string') return '';
+    var s = o.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim();
+    var chars = Array.from(s);
+    return chars.length <= max ? s : chars.slice(0, max).join('').trim();
+  }
+  function days(o) { return typeof o === 'number' && o % 1 === 0 && o >= 1 && o <= 365 ? o : null; }
+
+  var m = /(?:^#|&|#)g=([A-Za-z0-9_-]+)/.exec(location.hash);
+  var g = null, error = t.bad;
+  if (m && m[1].length <= 1280) {
+    try {
+      var b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      var j = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+      if (j && typeof j === 'object' && !Array.isArray(j) && typeof j.v === 'number' && j.v % 1 === 0 && j.v >= 1) {
+        if (j.v > VERSION) error = t.newer; else g = j;
+      }
+    } catch (e) { g = null; }
+  }
+  var lines = [];
+  if (g) {
+    var name = text(g.n, 40), by = text(g.by, 30), msg = text(g.m, 120);
+    var f1 = days(g.f1), f2 = days(g.f2), cb = days(g.cb);
+    var fl = [];
+    if (Array.isArray(g.fl)) {
+      g.fl.slice(0, 3).forEach(function (f) {
+        if (!Array.isArray(f) || !text(f[0], 30)) return;
+        var d = f.length > 1 ? days(f[1]) : null;
+        fl.push(d === null ? text(f[0], 30) : t.fizzy(text(f[0], 30), d));
+      });
+    }
+    if (name) lines.push(t.batch(name));
+    if (f1 !== null) lines.push('F1 ' + t.days(f1));
+    if (f2 !== null) lines.push('F2 ' + t.days(f2));
+    if (cb !== null) lines.push(t.draw(t.days(cb)));
+    if (fl.length) lines.push(t.best(fl.join(', ')));
+    if (msg) lines.push('“' + msg + '”');
+    $('title').textContent = by ? t.titleFrom(by) : t.title;
+  }
+  if (!lines.length) {
+    hide('card'); hide('sub'); hide('open'); hide('after');
+    $('bad').className = '';
+    $('bad').textContent = error;
+    return;
+  }
+  lines.forEach(function (line) {
+    var p = document.createElement('p');
+    p.textContent = line;
+    $('lines').appendChild(p);
+  });
+
+  var data = m[1];
+  var ua = navigator.userAgent;
+  var android = /Android/i.test(ua);
+  var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (android) {
+    // Opens the app with the same data, or Google Play when it is not installed.
+    $('open').href = 'intent://scoby#g=' + data + '#Intent;scheme=ferment;package=com.andrii.ferment;S.browser_fallback_url=' +
+      encodeURIComponent(PLAY) + ';end';
+  } else if (ios) {
+    $('open').href = 'ferment://scoby#g=' + data;
+    if (APP_STORE) { $('play').href = APP_STORE; } else { hide('play'); hide('after'); $('ios').textContent = t.ios; }
+  } else {
+    // On a computer there is no app to open: the store page is the way.
+    hide('open'); hide('after');
+  }
+})();
+</script>
+</body>
+</html>

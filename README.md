@@ -3,6 +3,12 @@
 Privacy policies and terms of use for apps by Dre Dev (mobile.support@zhukovskyi.space), served with GitHub Pages
 (Settings → Pages → Deploy from a branch → `main` / root).
 
+**Since 23.11.2026 the address of every privacy policy and terms of use is on zhukovskyi.space:**
+`https://zhukovskyi.space/apps/<app>/privacy/` and `/apps/<app>/terms/`. The texts are still written here. After a
+change is merged, copy it to the site: `cd ~/Desktop/my_space && python3 tools/sync_policies.py && ./deploy.sh -n`,
+check the dry run, then `./deploy.sh`. The pages here stay online with the same text, a `rel="canonical"` link and a
+note pointing to the new address, so old links in stores and app builds keep working. Nothing here is deleted.
+
 | App | Privacy policy | Terms of use | Support |
 | --- | --- | --- | --- |
 | Fastwise: Fasting Tracker | [fastwise/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/privacy.html) | [fastwise/terms.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/terms.html) | [fastwise/support.html](https://andronaft-2.github.io/app_politics_and_terms/fastwise/support.html) |
@@ -27,5 +33,13 @@ Privacy policies and terms of use for apps by Dre Dev (mobile.support@zhukovskyi
 | ShiftWise | [shiftwise/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/shiftwise/privacy.html) | [shiftwise/terms.html](https://andronaft-2.github.io/app_politics_and_terms/shiftwise/terms.html) | [shiftwise/support.html](https://andronaft-2.github.io/app_politics_and_terms/shiftwise/support.html) |
 | Ferment | [ferment/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/ferment/privacy.html) | [ferment/terms.html](https://andronaft-2.github.io/app_politics_and_terms/ferment/terms.html) | [ferment/support.html](https://andronaft-2.github.io/app_politics_and_terms/ferment/support.html) |
 | Levain | [levain/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/levain/privacy.html) | [levain/terms.html](https://andronaft-2.github.io/app_politics_and_terms/levain/terms.html) | [levain/support.html](https://andronaft-2.github.io/app_politics_and_terms/levain/support.html) |
+| Aestheria | [aestheria/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/aestheria/privacy.html) | [aestheria/terms.html](https://andronaft-2.github.io/app_politics_and_terms/aestheria/terms.html) | [aestheria/support.html](https://andronaft-2.github.io/app_politics_and_terms/aestheria/support.html) |
+| Bubble Meadow | [bubble-meadow/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/bubble-meadow/privacy.html) | [bubble-meadow/terms.html](https://andronaft-2.github.io/app_politics_and_terms/bubble-meadow/terms.html) | [bubble-meadow/support.html](https://andronaft-2.github.io/app_politics_and_terms/bubble-meadow/support.html) |
+| Lavender Lane | [lavender-lane/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/lavender-lane/privacy.html) | [lavender-lane/terms.html](https://andronaft-2.github.io/app_politics_and_terms/lavender-lane/terms.html) | [lavender-lane/support.html](https://andronaft-2.github.io/app_politics_and_terms/lavender-lane/support.html) |
+| Cooked Twice | [cooked-twice/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/cooked-twice/privacy.html) | [cooked-twice/terms.html](https://andronaft-2.github.io/app_politics_and_terms/cooked-twice/terms.html) | [cooked-twice/support.html](https://andronaft-2.github.io/app_politics_and_terms/cooked-twice/support.html) |
+| Water Buddy: Hydration Tracker | [water-buddy/privacy.html](https://andronaft.github.io/app_politics_terms/water-buddy/privacy/) | [water-buddy/terms.html](https://andronaft.github.io/app_politics_terms/water-buddy/terms/) | [water-buddy/support.html](https://andronaft-2.github.io/app_politics_and_terms/water-buddy/support.html) |
+| Japan Trip Planner | [japan-trip/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/japan-trip/privacy.html) | [japan-trip/terms.html](https://andronaft-2.github.io/app_politics_and_terms/japan-trip/terms.html) | [japan-trip/support.html](https://andronaft-2.github.io/app_politics_and_terms/japan-trip/support.html) |
+| Tidy Tubes | [tidy-tubes/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/tidy-tubes/privacy.html) | [tidy-tubes/terms.html](https://andronaft-2.github.io/app_politics_and_terms/tidy-tubes/terms.html) | [tidy-tubes/support.html](https://andronaft-2.github.io/app_politics_and_terms/tidy-tubes/support.html) |
+| Marble Brook | [marble-brook/privacy.html](https://andronaft-2.github.io/app_politics_and_terms/marble-brook/privacy.html) | [marble-brook/terms.html](https://andronaft-2.github.io/app_politics_and_terms/marble-brook/terms.html) | [marble-brook/support.html](https://andronaft-2.github.io/app_politics_and_terms/marble-brook/support.html) |
 
 Add a new app as a new folder with its own `privacy.html`, `terms.html` and `support.html` (App Store needs a support URL), then run `python3 tools/build_index.py`: it rebuilds the app list in `index.html` and this table from the folders (also the way to resolve merge conflicts in those two files).
